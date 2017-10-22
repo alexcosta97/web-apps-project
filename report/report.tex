@@ -1,0 +1,65 @@
+\documentclass{report}
+\usepackage[english]{babel}
+\usepackage[a4paper, portrait, margin=1in]{geometry}
+\usepackage{subfiles}
+\usepackage{enumitem}
+
+\usepackage{graphicx}
+\graphicspath{{.img/}}
+
+\usepackage{fontspec}
+\setmainfont[
+    ExternalLocation=.fonts/,
+    Ligatures=TeX,
+    BoldFont={LibertineBold},
+    BoldItalicFont={LibertineBoldItalic},
+    ItalicFont={LibertineRegularItalic}
+]{LibertineRegular}
+
+\usepackage{titlesec}
+\titleformat{\chapter}
+    {\Large\bfseries}   % format
+    {}                  % label
+    {0pt}               % separator
+    {\huge}             % before-code
+
+\addto\captionsenglish{\renewcommand{\contentsname}{Summary}}
+
+\title{
+    \fontspec[Path=.fonts/]{LibertineDisplay}
+    \Large CO550\\
+    Web Applications\\
+    Coursework 1\vspace*{.65cm}\\
+    \huge Design a Simple Web Database Application\vfill
+}
+\author{
+    James Harris\\
+    \textit{21606555}\\
+    \hfill\\
+    Alex Paulo da Costa\\
+    \textit{21611431}
+}
+\date{
+    \vfill\textbf{\today}\\
+    \vspace*{.75cm}\textit{Computing \& Web Development}\\
+    Buckinghamshire New University
+}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\chapter{Project Outlines}
+\subfile{project-outlines/enterprise-model}
+\subfile{project-outlines/business-goals}
+\subfile{project-outlines/functional-requirements}
+\subfile{project-outlines/outline-of-the-project}
+
+\chapter{Diagrams \& Schematics}
+\subfile{diagrams-schematics/entity-relationship-diagrams}
+\subfile{diagrams-schematics/uml-class-diagrams}
+\subfile{diagrams-schematics/interface-prototypes}
+
+\end{document}

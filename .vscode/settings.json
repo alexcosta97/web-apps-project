@@ -1,0 +1,19 @@
+{
+  "latex-workshop.latex.toolchain": [
+    {
+      "command": "xelatex",
+      "args": [
+        "--synctex=2",
+        "--output-directory=.pdf",
+        "--interaction=nonstopmode",
+        "-shell-escape",
+        "%DOC%.tex"
+      ]
+    }
+  ],
+  "latex-workshop.latex.clean.enabled": false,
+  "latex-workshop.latex.outputDir": ".pdf",
+  "latex-workshop.latex.autoBuild.onSave.enabled": true,
+  "latex-workshop.latex.autoBuild.onTexChange.enabled": true,
+  "spellright.language": "English"
+}
