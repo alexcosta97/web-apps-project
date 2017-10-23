@@ -1,0 +1,5 @@
+C:\Users\alexc\source\repos\web-apps-project\web-apps-project\bin\Debug\web-apps-project.dacpac
+C:\Users\alexc\source\repos\web-apps-project\web-apps-project\bin\Debug\web_apps_project.dll
+C:\Users\alexc\source\repos\web-apps-project\web-apps-project\bin\Debug\web_apps_project.pdb
+C:\Users\alexc\source\repos\web-apps-project\web-apps-project\obj\Debug\web_apps_project.dll
+C:\Users\alexc\source\repos\web-apps-project\web-apps-project\obj\Debug\web_apps_project.pdb
