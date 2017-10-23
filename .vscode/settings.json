@@ -15,5 +15,6 @@
   "latex-workshop.latex.outputDir": ".pdf",
   "latex-workshop.latex.autoBuild.onSave.enabled": true,
   "latex-workshop.latex.autoBuild.onTexChange.enabled": true,
-  "spellright.language": "English"
+  "spellright.groupDictionaries": false,
+  "spellright.language": "en-gb"
 }
