@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="ModelStoreContainer" CdmEntityContainer="Entities">
+    <EntitySetMapping Name="Directions">
+      <EntityTypeMapping TypeName="Model.Direction">
+        <MappingFragment StoreEntitySet="Direction">
+          <ScalarProperty Name="DirectionID" ColumnName="DirectionID" />
+          <ScalarProperty Name="DirectionName" ColumnName="DirectionName" />
+          <ScalarProperty Name="InboundBool" ColumnName="Direction" />
+          <ScalarProperty Name="LineID" ColumnName="LineID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Lines">
+      <EntityTypeMapping TypeName="Model.Line">
+        <MappingFragment StoreEntitySet="Line">
+          <ScalarProperty Name="LineID" ColumnName="LineID" />
+          <ScalarProperty Name="LineName" ColumnName="LineName" />
+          <ScalarProperty Name="LineStart" ColumnName="LineStart" />
+          <ScalarProperty Name="LineEnd" ColumnName="LineEnd" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Routes">
+      <EntityTypeMapping TypeName="Model.Route">
+        <MappingFragment StoreEntitySet="Route">
+          <ScalarProperty Name="RouteID" ColumnName="RouteID" />
+          <ScalarProperty Name="RouteNote" ColumnName="RouteNote" />
+          <ScalarProperty Name="DirectionID" ColumnName="DirectionID" />
+          <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
+          <ScalarProperty Name="RouteStart" ColumnName="RouteStart" />
+          <ScalarProperty Name="RouteEnd" ColumnName="RouteEnd" />
+          <ScalarProperty Name="RouteDuration" ColumnName="RouteDuration" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Staffs">
+      <EntityTypeMapping TypeName="Model.Staff">
+        <MappingFragment StoreEntitySet="Staff">
+          <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="NINumber" ColumnName="NINumber" />
+          <ScalarProperty Name="AccountNumber" ColumnName="AccountNumber" />
+          <ScalarProperty Name="SortCode" ColumnName="SortCode" />
+          <ScalarProperty Name="Role" ColumnName="Role" />
+          <ScalarProperty Name="HoursContracted" ColumnName="HoursContracted" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Stops">
+      <EntityTypeMapping TypeName="Model.Stop">
+        <MappingFragment StoreEntitySet="Stops">
+          <ScalarProperty Name="StopID" ColumnName="StopID" />
+          <ScalarProperty Name="StopName" ColumnName="StopName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="Model.User">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="SurName" ColumnName="SurName" />
+          <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+          <ScalarProperty Name="eMail" ColumnName="eMail" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Addresses">
+      <EntityTypeMapping TypeName="Model.Address">
+        <MappingFragment StoreEntitySet="Addresses">
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="Street1" ColumnName="Street1" />
+          <ScalarProperty Name="Street2" ColumnName="Street2" />
+          <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
+          <ScalarProperty Name="County" ColumnName="County" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="FavLines">
+      <EntityTypeMapping TypeName="Model.FavLine">
+        <MappingFragment StoreEntitySet="FavLines">
+          <ScalarProperty Name="userID" ColumnName="userID" />
+          <ScalarProperty Name="LineID" ColumnName="LineID" />
+          <ScalarProperty Name="FavName" ColumnName="FavName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="FavRoutes">
+      <EntityTypeMapping TypeName="Model.FavRoute">
+        <MappingFragment StoreEntitySet="FavRoutes">
+          <ScalarProperty Name="userID" ColumnName="userID" />
+          <ScalarProperty Name="RouteID" ColumnName="RouteID" />
+          <ScalarProperty Name="FavName" ColumnName="FavName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RouteStops">
+      <EntityTypeMapping TypeName="Model.RouteStop">
+        <MappingFragment StoreEntitySet="RouteStop">
+          <ScalarProperty Name="RouteID" ColumnName="RouteID" />
+          <ScalarProperty Name="StopID" ColumnName="StopID" />
+          <ScalarProperty Name="RouteStopTime" ColumnName="RouteStopTime" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="DirectionStop" TypeName="Model.DirectionStop" StoreEntitySet="DirectionStop">
+      <EndProperty Name="Direction">
+        <ScalarProperty Name="DirectionID" ColumnName="DirectionID" />
+      </EndProperty>
+      <EndProperty Name="Stops">
+        <ScalarProperty Name="StopID" ColumnName="StopID" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping>
