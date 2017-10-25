@@ -1,5 +1,7 @@
 *.log
 ~$*.doc*
+report/.pdf/*.*
+!report/.pdf/*.pdf
 
 ### VisualStudio ###
 ## Ignore Visual Studio temporary files, build results, and
