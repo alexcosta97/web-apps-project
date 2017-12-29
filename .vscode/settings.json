@@ -16,5 +16,6 @@
   "latex-workshop.latex.autoBuild.onSave.enabled": true,
   "latex-workshop.latex.autoBuild.onTexChange.enabled": true,
   "spellright.groupDictionaries": false,
-  "spellright.language": "en-GB"
+  "spellright.language": "en-GB",
+  "latex-workshop.debug.showUpdateMessage": false
 }
