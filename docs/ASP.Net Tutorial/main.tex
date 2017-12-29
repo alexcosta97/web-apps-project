@@ -702,4 +702,80 @@
     the form Tag Helper: method="get".
 
     \chapter{Adding validation}
+    In this section we will learn how to add validation to models, and ensure
+    that the validation rules are enforced every time a user creates or edits
+    data.
+
+    \section{Keeping things DRY}
+    One of the design tenets of MVC is DRY ("Don't repeat yourself"). ASP.NET
+    MVC encourages developers to specify functionality or behaviour only once,
+    and then have it reflected everywhere in an app. This reduces the amount
+    of code we need to write and makes the written code less error prone,
+    easier to test and easier to maintain.
+
+    The validation support provided by MVC and EF Core Code First is a good
+    example of the DRY principle in action. We can declaratively specify
+    validation rules in one place (in the model class) and the rules are
+    enforced everywhere in the app.
+
+    \section{Adding validation rules to a model}
+    DataAnnotations provides a built-in set of validation attributes that we
+    apply declaratively to any class or property. (It also contains formatting
+    like DataType that help with formatting and don'r provide any validation.)
+
+    In the DataAnnotations, we have useful validation attributes such as Required,
+    StringLength, RegularExpression and Range.
+
+    The validation attributes specify behaviour that we want to enforce on the model
+    properties they are applied to. The Required and MinimumLength attributes indicate
+    that a property must have a value; but nothing prevents a user from entering white
+    spaces to satisfy this validation. The RegularExpression attribute is used to limit
+    what characters can be input. The Range attribute constrains a value within a
+    specified range. The StringLength attribute lets us set the maximum length of a string
+    property, and optionally its minimum length. Value types (such as decimal, int, float,
+    DateTime) are inherently required and don't need the [Required] attribute.
+
+    Having validation rules automatically enforced by ASP.NET helps make our app
+    more robust. It also ensures that we can't forget to validate something and
+    inadvertently let bad data into the database.
+
+    \section{Validation Error UI in MVC}
+    If we try to fill out a form with some invalid values, as soon as jQuery client side
+    validation detects the error, it displays an error message.
+    The form will automatically render an appropriate validation error message in each
+    field containing an invalid value. The errors are enforced both client-side (using
+    JavaScript and jQuery) and server-side(in case a user has JavaScript)
+    disabled.
+
+    A significant benefit is that we didn't need to change a single line of code in the
+    rest of the code in order to enable this validation UI. The controller and views
+    automatically pick up the validation rules that we specify by using validation
+    attributes on the properties of the model.
+
+    The form data is not sent to the server until there are no client side validation
+    errors.
+
+    \section{How validation works}
+    We might wonder how the validation UI was generated without any updates to the code
+    in the controller or views. In the POST controller methods, the ModelState.IsValid is
+    called to check whether there are any validation errors, that is sent done by checking
+    that the data corresponds to what is stated in the Model, bringing the responsibility
+    of checking the data back to it, and not requiring any changes in the Controller code.
+
+    In the view, when using the Input Tag Helpers we enforce validation with the
+    asp-validation-for attribute. When rendering the page, the app fetches the validation
+    information from the model, therefore making it unnecessary to change any code in the
+    view.
+
+    What's really nice about this approach is that neither the controller nor the view know
+    anything about the actual validation rules being enforced or about the specific error
+    messages. The validation rules and the error strings are specified only in the model.
+    These same validation rules are automatically applied to any views that we might create
+    that somehow edit the model.
+
+    When we need to change validation logic, we can do so in exactly one place by adding
+    validation attributes to the model. We won't have to worry about different parts of
+    the application being inconsistent with how the rules are enforced - all validation logic
+    will be defined in one place and used everywhere. This keeps the code very clean, and makes
+    it easy to maintain and evolve. And it means that we'll be fully honoring the DRY principle.
 \end{document}
