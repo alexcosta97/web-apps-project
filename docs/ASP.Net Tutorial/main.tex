@@ -879,4 +879,160 @@
     Another common work around for methods that have identical names and signatures is
     to artificially change the signature of the POST method to include an extra (unused)
     parameter.
+
+    \chapter{Introduction to Identity on ASP.NET Core}
+    ASP.NET Core Identity is a membership system which allows us to add login functionality
+    to our application. Users can create an account and login with a username and password
+    or they can use an external login provider such as Facebook, Google, Microsoft Account,
+    Twitter or others.
+    We can configure ASP.NET Core Identity to use a SQL Server database to store usernames,
+    passwords and profile data. Alternatively, we can use our own persistent store.
+
+    \section{Overview of Identity}
+    In this topic we will learn how to use ASP.NET Core Identity to add functionality to
+    register, log in, and log out a user.
+    \begin{itemize}
+        \item Create an ASP.NET Core Web Application project with Individual User Accounts
+        \begin{itemize}
+            \item Create the new project using "dotnet new mvc --auth Individual"
+            \item The created project contains the Microsoft.AspNetCore.Identity.EntityFrameworkCore
+            package, which persists the Identity data and schema to SQL Server using EF Core
+        \end{itemize}
+        \item Configure Identity services and add middleware in Startup.
+        \begin{itemize}
+            \item The Identity services are added to the application in the ConfigureServices method
+            in the Startup class:
+            \lstset{style=sharpc}
+            \begin{lstlisting}
+                public void ConfigureServices(IServiceCollection services)
+                {
+                    services.AddDbContext<ApplicationDbContext>(options);
+                    //The line above is previously set up code so I cut a bit
+                    //out of it
+
+                    services.AddIdentity<ApplicationUser, IdentityRole>()
+                        .AddEntityFrameworkStores<ApplicationDbContext>()
+                        .AddDefaultTokenProviders();
+                    
+                    services.Configure<IdentityOptions>(options =>
+                    {
+                        //Password settings
+                        options.Password.RequireDigit = true;
+                        options.Password.RequiredLength = 8;
+                        options.Password.RequireNonAlphanumeric = false;
+                        options.Password.RequireUppercase = true;
+                        options.Password.RequireLowercase = false;
+                        options.Password.RequiredUniqueChars = 6;
+
+                        //Lockout settings
+                        options.Lockout.DefaultLockoutTimeSpan = TimeSpan
+                            .FromMinutes(30);
+                        options.Lockout.MaxFailedAccessAttempts = 10;
+                        options.Lockout.AllowsForNewUsers = true;
+
+                        //User settings
+                        options.User.RequireUniqueEmail = true;
+                    });
+
+                    services.ConfigureApplicationCookie(options =>
+                    {
+                        //Cookie settings
+                        options.Cookie.HttpOnly = true;
+                        options.Cookie.Expiration = TimeSpan.FromDays(150);
+                        options.LoginPath = "/Account/Login";
+                        options.LogoutPath = "/Account/Logout";
+                        options.AccessDeniedPath = "/Account/AccessDenied";
+                        options.SlidingExpiration = true;
+                    });
+                }
+            \end{lstlisting}
+            \item These services are made available to the application through
+            dependency injection.
+            Identity is enabled for the application by calling UseAuthentication in
+            the Configure method. UseAuthentication adds authentication middleware
+            to the requested pipeline.
+        \end{itemize}
+        \item Create a user
+
+        Launch the application and then click on the Register link. If this is the
+        first time we're performing this action, we may be required to run migrations.
+        The application prompts us to Apply Migrations. Alternatively, we can test using
+        ASP.NET Core Identity with our app without a persistent database by using an
+        in-memory database. To use an in-memory database, we need to add the
+        Microsoft.EntityFrameworkCore.InMemory package to our app and modify our app's
+        call to AddDbContext in ConfigureServices as follows:
+        \lstset{style=sharpc}
+        \begin{lstlisting}
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseInMemoryDatabase(Guid.NewGuid().ToString()));
+        \end{lstlisting}
+    \end{itemize}
+
+    When the user clicks the Register link, the Register action is invoked on
+    AccountController. The Register action creates the user by calling CreateAsync
+    on the _userManager object (provided to AccountController by dependency injection):
+
+    \lstset{style=sharpc}
+    \begin{lstlisting}
+        var result = await _userManager.CreateAsync(user, model.Password);
+    \end{lstlisting}
+    
+    If the user was created successfully, the user is logged in by the call
+    to _signInManager.SignInAsync.
+
+    \subsection{Log in}
+    Users can sign in by clicking the Log in link at the top of the site,
+    or they may be navigated to the Login page if they attempt to access
+    a part of the site that requires authorization. When the user submits
+    the form on the Login page, the AccountController Login action is
+    called:
+    \lstset{style=sharpc}
+    \begin{lstlisting}
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnURL;
+            if(ModelState.IsValid)
+            {
+                //This doesn't count login failures towards account Lockout
+                // To enable password failures to trigger account lockout,
+                //set lockoutOnFailure: true
+                var result = await _signInManager.PasswordSignInAsync(model.Email,
+                    model.Password, model.RememberMe, lockoutOnFailure: false);
+                if(result.Succeeded)
+                {
+                    _logger.LogInformation(1, "User logged in.");
+                    return RedirectToLocal(returnUrl);
+                }
+                if(result.RequiresTwoFactor)
+                {
+                    return RedirectToAction(nameof(SendCode),
+                        new{ReturnUrl = returnUrl,
+                            RememberMe = model.RememberMe});
+                }
+                if(result.IsLockedOut)
+                {
+                    _logger.LogWarning(2, "User account is locked out");
+                    return View("Lockout");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt");
+                    return View(model);
+                }
+            }
+
+            //If we got this far, something failed, redisplay form
+            return View(model);
+        }
+    \end{lstlisting}
+
+    The Login action calls PasswordSignInAsync on the signInManager object
+    (provided to AccountController by dependency injection).
+
+    The base Controller class exposes a User property that we can access from
+    controller methods. For instance, we can enumerate User.Claims and make
+    authorization decisions.
 \end{document}
