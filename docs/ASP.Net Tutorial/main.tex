@@ -778,4 +778,105 @@
     the application being inconsistent with how the rules are enforced - all validation logic
     will be defined in one place and used everywhere. This keeps the code very clean, and makes
     it easy to maintain and evolve. And it means that we'll be fully honoring the DRY principle.
+
+    \section{Using DataType Attributes}
+    The System.ComponentModel.DataAnnotations namespace provides formatting attributes in addition
+    to the built-in set of validation attributes. The DataType attributes only provide hints for the
+    view engine to format data (and supply attributes such as <a> for URLs and mailto for emails).
+    We can use the RegularExpression attribute to validate the format of the data. The DataType
+    attribute is used to specify a data type that is more specific than the database intrinsic
+    type, they are not validation attributes. In this case we only want to keep track
+    of the data, not the time. The DateType enumeration provides for many data types, such as Date,
+    Time, PhoneNumber, Currency, EmailAddress and more. The DateType attribute can also enable the
+    application to automatically provide type-specific features. For example, a mailto: link can be
+    created for DataType.EmailAddress, and a date selector can be provided for DataType.Date in
+    browsers that support HTML5. The DataType attributes emits HTML 5 data- attributes that HTML 5
+    browsers can understand. The DataType attributes do not provide validation.
+
+    DataType.Date does not specify the format of the data that is displayed. By default, the data
+    field is displayed according to the default formats based on the server's CultureInfo.
+
+    The DisplayFormat attribute is used to explicitly specify the date format.
+    The ApplyFormatInEditMode setting specifies that the formatting should also be applied when the
+    value is displayed in a text box for editing.
+    We can use the DisplayFormat attribute by itself, but it's generally a good idea to use the
+    DataType attribute. The DataType attribute conveys the semantics of the data as opposed
+    to how to render it on a screen, and provides the following benefits that we don't get with
+    DisplayFormat:
+    \begin{itemize}
+        \item The browser can enable HTML5 features (calendar control, the locale-appropriate
+        currency symbol, email links, etc.)
+        \item By default, the browser will render data using the correct format based on the
+        locale
+        \item The DataType attribute can enable MVC to choose the right field template to render
+        the data (the DisplayFormat is used by itself uses the string template)
+    \end{itemize}
+
+    Note: jQuery validation does not work with the Range attribute and DateTime when used together.
+
+    We will need to disable jQuery date validation to use the Range attribute with DateTime. It's generally
+    not a good practice to compile hard dates in our models, so using the Range attribute and DateTime
+    is discouraged.
+
+    \chapter{Examining the Delete methods}
+    There are two method related to deleting an entry from the database, the Delete and DeleteConfirmed
+    methods that are scaffolded from the Models. Using again the movie database example, here is what they
+    look like:
+
+    \lstset{style=sharpc}
+    \begin{lstlisting}
+        //GET: Movies/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if(id == null)
+            {
+                return NotFound();
+            }
+
+            var movie = await _context.Movie
+                .SingleOrDefaultAsync(m => m.ID == id);
+            if(movie == null)
+            {
+                return NotFound();
+            }
+
+            return View(movie);
+        }
+
+        //POST: Movies/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var movie = await _context.Movie
+                SingleOrDefaultAsync(m => m.ID == id);
+            _context.Movie.Remove(movie);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+    \end{lstlisting}
+
+    Note that the HTTP GET Delete method doesn't delete the specified movie,
+    it returns a view of the movie where we can submit (HttpPost) the deletion.
+    Performing a delete operation in response to a GET request opens up a
+    security hole.
+
+    The [HttpPost] method that deletes the data is named DeleteConfirmed to give
+    the HTTP POST method a unique signature or name. The CLR requires overload
+    methods to have a unique parameter signature. However, here we have two Delete
+    methods -- one for GET and one for POST -- that both have the same parameter
+    signature.
+
+    There are two approaches to this problem, one is to give the methods different
+    names. That's what the scaffolding mechanism did in the preceding example.
+    However, this introduces a small problem: ASP.NET maps segments of a URL to
+    action methods by name, and if we rename a method, routing normally wouldn't
+    be able to find that method. The solution is what we see in the example, which
+    is to add the ActionName("Delete") attribute to the DeleteConfirmed method. That
+    attribute performs mapping for the routing system so that a URL that includes /Delete/
+    for a POST request will find the DeleteConfirmed method.
+
+    Another common work around for methods that have identical names and signatures is
+    to artificially change the signature of the POST method to include an extra (unused)
+    parameter.
 \end{document}
