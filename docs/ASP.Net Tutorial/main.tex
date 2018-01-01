@@ -1035,4 +1035,54 @@
     The base Controller class exposes a User property that we can access from
     controller methods. For instance, we can enumerate User.Claims and make
     authorization decisions.
+
+    \subsection{Log out}
+    Clicking the Log out link on a web page calls the LogOut action:
+    \lstset{style=sharpc}
+    \begin{lstlisting}
+        //POST: /Account/LogOut
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LogOut()
+        {
+            await _signInManager.SignOutAsync();
+            _logger.LogInformation(4, "User logged out.");
+            return RedirectToAction(nameof(HomeController.Index). "Home");
+        }
+    \end{lstlisting}
+
+    The preceding code above calls the signInManager.SignOutAsync method. The SignOutAsync method clears the user's claims stored in a cookie.
+
+    \section{Identity Components}
+    The primary reference assembly for the Identity system is Microsoft.AspNetCore.Identity. This package contains the core set of interfaces for ASP.NET Core Identity, and is included by Microsoft.AspNetCore.Identity.EntityFrameworkCore.
+
+    These dependencies are needed to use the Identity system in ASP.NET Core applications:
+    \begin{itemize}
+        \item Microsoft.AspNetCore.Identity.EntityFrameworkCore - Contains the required types to use Identity with Entity Framework Core.
+        \item Microsoft.EntityFrameworkCore.SqlServer - Entity Framework is Microsoft's recommended data access technology for relation databases like SQL Server. For testing, we can use Microsoft.EntityFrameworkCore.InMemory.
+        \item Microsoft.AspNetCore.Authentication.Cookies - Middleware that enables an app to use cookie-based authentication.
+    \end{itemize}
+
+    \chapter{Configure Identity}
+    ASP.NET Core Identity has some default behaviours that we can override easily in our application's Startup class.
+
+    \section{Passwords policy}
+    By default, Identity requires that passwords contain an uppercase character, lowercase character, a digit, and a non-alphanumeric character. There are also some other restrictions. If we want to simplify password restrictions, we can do that in the Startup class of our application.
+
+    ASP.NET Core 2.0 added the RequiredUniqueChars property. Otherwise, the options are the same from ASP.NET COre 1.x.
+    \lstset{style=sharpc}
+    \begin{lstlisting}
+        services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+        {
+            //Password settings
+            options.Password.RequireDigit = true;
+            options.Password.RequiredLength = 8;
+            options.Password.RequireNonAlphanumeric = true;
+            options.Password.RequireUppercase = true;
+            options.Password.RequireLowercase = true;
+            options.Password.RequiredUniqueChars = 2;
+        })
+        .AddEntityFrameworkStores<ApplicationDbContext();
+        .AddDefaultTokenProviders();
+    \end{lstlisting}
 \end{document}
