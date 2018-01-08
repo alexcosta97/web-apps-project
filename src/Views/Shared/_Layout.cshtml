@@ -34,6 +34,7 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
                 </ul>
+                @await Html.PartialAsync("_LoginPartial")
             </div>
         </div>
     </nav>
@@ -41,7 +42,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2017 - src</p>
+            <p>&copy; 2018 - src</p>
         </footer>
     </div>
 
