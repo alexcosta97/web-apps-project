@@ -1085,4 +1085,498 @@
         .AddEntityFrameworkStores<ApplicationDbContext();
         .AddDefaultTokenProviders();
     \end{lstlisting}
+
+    \section{User's lockout}
+    \lstset{style=sharpc}
+    \begin{lstlisting}
+        services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+        {
+            //Lockout settings
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+            options.Lockout.MaxFailedAccessAttempts = 5;
+            options.Lockout.AllowedForNewUsers = true;
+        })
+        .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddDefaultTokenProviders();
+    \end{lstlisting}
+
+    IdentityOptions.Lockout has the following properties:
+    \begin{itemize}
+        \item DefaultLockoutTimeSpan: The amount of time a user is locked
+        out when a lockout occurs. Defaults to 5 minutes.
+        \item MaxFailedAccessAttempts: The number of failed access attempts
+        until a user is locked out, if lockout is enabled. Defaults to 5.
+        \item AllowedForNewUsers: Determines if a new user can be locked out.
+        Defaults to true.
+    \end{itemize}
+
+    \section{Sign in settings}
+    \lstset{style=sharpc}
+    \begin{lstlisting}
+        services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+        {
+            //Signin settings
+            options.SignIn.RequireConfirmedEmail = true;
+            options.SignIn.RequireConfirmedPhoneNumber = false;
+        })
+        .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddDefaultTokenProviders();
+    \end{lstlisting}
+
+    Identity.Options.SignIn has the following properties:
+    \begin{itemize}
+        \item RequireConfirmedEmail: Requires a confirmed email to sign
+        in. Defaults to false
+        \item RequireConfirmedPhoneNumber: Requires a confirmed phone number
+        to sign in. Defaults to false.
+    \end{itemize}
+
+    \section{User validation settings}
+    \lstset{style=sharpc}
+    \begin{lstlisting}
+        services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+        {
+            //User settings
+            options.User.RequireUniqueEmail = true;
+        })
+        .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddDefaultTokenProviders();
+    \end{lstlisting}
+
+    Identity.User has the following properties:
+    \begin{itemize}
+        \item RequireUniqueEmail: Requires each User to have a unique email.
+        Defaults to false.
+        \item AllowedUserNameCharacters: Allowed characters in the username.
+        Defaults to alphanumeric characters and -._@+
+    \end{itemize}
+
+    \section{Application's cookie settings}
+    Like the passwords policy, all the settings of the application's cookie
+    can be changed in the Startup class.
+    \lstset{style=sharpc}
+    \begin{lstlisting}
+        services.ConfigureApplicationCookie(options =>
+        {
+            options.Cookie.Name = "YourAppCookieName";
+            options.Cookie.HttpOnly = true;
+            options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+            options.LoginPath = "/Account/Login";
+            options.LogoutPath = "/Account/Logout";
+            options.AccessDeniedPath = "/Account/AccessDenied";
+            options.SlidingExpiration = true;
+            //Requires using Microsoft.AspNetCore.Authentication.Cookies;
+            options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
+        });
+    \end{lstlisting}
+
+    CookieAuthenticationOptions has the following properties:
+    \begin{itemize}
+        \item Cookie.Name: The name of the cookie. Defaults to.AspNetCore.Cookies.
+        \item Cookie.HttpOnly: When true, the cookie is not accessible from
+        client-side scripts. Defaults to true.
+        \item ExpireTimeSpan: Controls how much time the authentication ticket
+        is stored in the cookie will remain valid from the point it is created.
+        Defaults to 14 days.
+        \item LoginPath: When a user is unauthorized, they will be redirected
+        to this path to login. Defaults to /Account/Login.
+        \item LogoutPath: When a user is logged out, they will be redirected to
+        this path to login. Defaults to /Account/Logout.
+        \item AccessDeniedPath: When a user fails an authorization check, they
+        will be redirected to this path. Defaults to /Account/AccessDenied.
+        \item SlidingExpiration: When true, a new cookie will be issued with a
+        new expiration time when the current cookie is more than halfway through
+        the expiration window. Defaults to true.
+        \item ReturnUrlParameter: The ReturnUrlParameter determines the name of
+        the query string parameter which is appended by the middleware when a 401
+        Unauthorized status code is changed to a 302 redirect onto the login path.
+    \end{itemize}
+
+    \chapter{Custome storage providers for ASP.NET Core Identity}
+    ASP.NET Core Identity is an extensible system which enables us to create a
+    custom storage provider and connect it to our app.
+
+    \section{Introduction}
+    By default, the ASP.NET Core Identity system stores user information in a SQL
+    Server database using Entity Framework Core. For many apps, this approach works
+    well. However, we may prefer to use a different persistence mechanism or data schema.
+    We can write a customized provider for our storage mechanism and plug that provider
+    into our app.
+
+    \section{The ASP.NET Core Identity architecture}
+    ASP.NET Core Identity consists of classes called managers and stores. Managers are
+    high-level classes which an app developer uses to perform operations,
+    such as creating an Identity user. Stores are lower-level classes that specify
+    how entities, such as users and roles, are persisted. Stores follow the repository
+    pattern and are closely coupled with the persistence mechanism.
+    Managers are decoupled from stores, which means we can replace the persistence
+    mechanism without changing our application code (except for configuration).
+
+    The web app interacts the following way: ASP.NET Core app - Identity Manager -
+    Identity Store - Data Access Layer - Data Source.
+
+    To create a custom storage provider, create the data source, the data access
+    layer and the store classes that interact with this data access layer. We don't
+    need to customize the managers or our app code that interacts with them.
+
+    When creating a new instance of UserManager or RoleManager we can provide the
+    type of the user class and pass an instance of the store class as an argument.
+    This approach enables us to plug our customized classes into ASP.NET Core.
+
+    \section{ASP.NET Core Identity stores data types}
+    ASP.NET Core Identity data types are detailed in the following
+    sections:
+
+    \subsection{Users}
+    Registered users of our web site. The IdentityUser type may be extended or
+    used as an example for our own custom type. We do not need to inherit from
+    a particular type to implement our own custom identity storage solution.
+
+    \subsection{User Claims}
+    A set of statements (or Claims) about the user that represent the user'safe
+    identity. Can enable greater expression of the user's identity than can be
+    achieved through roles.
+
+    \subsection{User Logins}
+    Information about the external authentication provider (like Facebook or a
+    Microsoft account) to use when logging a user.
+
+    \subsection{Roles}
+    Authorization groups for our site. Includes the role ID and role name (like
+    "Admin" or "Employee").
+
+    \section{The data access layer}
+    This topic assumes we are familiar with the persistence mechanism that we
+    are going to use and how to create entities for that mechanism. This topic
+    does not provide details about how to create the repositories or data access
+    classes; it provides some suggestions about design decisions when working
+    with ASP.NET Core Identity.
+
+    We have a lot of freedom when designing the data access layer for a
+    customized store provider. We only need to create persistence mechanisms
+    for features that we intend to use in our app. For example, if we are not
+    using roles in our app, we do not need to create storage for roles or user
+    role associations. Our technology and existing infrastructure may require a
+    structure that is very different from the default implementation of ASP.NET
+    Core Identity. In our data access layer, we provide the logic to work with the
+    structure of our storage implementation.
+
+    The data access layer provides the logic to save the data from ASP.NET Core
+    Identity to a data source. The data access layer for our customized storage
+    provider might include the following classes to store user and role information.
+
+    \subsection{Context class}
+    Encapsulates the information to connect to our persistence mechanism and
+    execute queries. Several data classes require an instance of this class, typically
+    provided through dependency injection.
+
+    \subsection{User Storage}
+    Stores and retrieves user information (such as user name and password hash).
+
+    \subsection{Role Storage}
+    Stores and retrieves role information (such as the role name).
+
+    \subsection{UserClaims Storage}
+    Stores and retrieves user claim information (such as the claim type and value).
+
+    \subsection{UserLogins Storage}
+    Stores and retrieves user login information (such as an external authentication
+    provider).
+
+    \subsection{UserRole Storage}
+    Stores and retrieves which roles are assigned to which user.
+    Tip: Only implement the classes we intend to use in our app.
+
+    In the data access classes, provide code to perform data operations for our
+    persistence mechanism. For example, within a custom provider, we might have
+    the following code to create a new user in the store class:
+    
+    \lstset{style=sharpc}
+    \begin{lstlisting}
+        public async Task<IdentityResult> CreateAsync(ApplicationUser user,
+            Cancellation Token cancellationToken = default(CancellationToken))
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if(user == null) throw new ArgumentNullException(nameof(User));
+
+            return await _usersTable.CreateAsync(user);
+        }
+    \end{lstlisting}
+
+    The implementation logic for creating the user is in the
+    usersTable.CreateAsync method.
+
+    \section{Customize the user class}
+    When implementing a storage provider, create a user class which is equivalent
+    to the IdentityUser class.
+
+    At a minimum, our user class must include an Id and a UserName property.
+    The IdentityUser class defines properties that the UserManager calls when
+    performing requested operations. The default type of the Id property is a
+    a string, but we can inherit from IdentityUser<TKey, TUserClaim, TUserRole,
+    TUserRole, TUserLogin, TUserToken> and specify a different type. The framework
+    expects the storage implementation to handle data type conversions.
+
+    \section{Customize the user store}
+    Create a UserStore class that provides methods for all data operations on
+    the user. This class is equivalent to the UserStore class. In our UserStore
+    class, implement IUserStore<TUser> and the optional interfaces required. We
+    select which optional interfaces to implement based on the functionality
+    provided in our app.
+
+    ${Optional Interfaces}$
+    \begin{itemize}
+        \item IUserRoleStore
+        \item IUserClaimStore
+        \item IUserPasswordStore
+        \item IUserSecurityStampStore
+        \item IUserEmailStore
+        \item IPhoneNumberStore
+        \item IQueryableUserStore
+        \item IUserLoginStore
+        \item IUserTwoFactorStore
+        \item IUserLockoutStore
+    \end{itemize}
+
+    The optional interfaces inherit from IUserStore. We can see a partially
+    implemented sample user store below:
+    
+    \lstset{style=sharpc}
+    \begin{lstlisting}
+        using Microsoft.AspNetCore.Identity;
+        using System;
+        using System.Threading.Tasks;
+        using System.Threading;
+
+        namespace CustomIdentityProviderSample.CustomProvider
+        {
+            ///<summary>
+            ///This store is only partially implemented. It supports
+            ///user creation and find methods.
+            ///</summary>
+            public class CustomUserStore: IUserStore<ApplicationUser>,
+                IUserPasswordStore<ApplicationUser>
+            {
+                private readonly DapperUsersTable _usersTable;
+
+                public CustomUserStore (DapperUsersTable usersTable)
+                {
+                    _usersTable = usersTable;
+                }
+
+                #region createuser
+                public async Task<IdentityResult> CreateAsync(ApplicationUser user,
+                    CancellationToken cancellationToken = default(CancellationToken))
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    if(user == null) throw new ArgumentNullException(nameof(user));
+
+                    return await _usersTable.CreateAsync(user);
+                }
+                #endregion
+
+                public async Task<IdentityResult> DeleteAsync(ApplicationUser user,
+                    CancellationToken cancellationToken = default(CancellationToken))
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    if(user == null) throw new ArgumentNullException(nameof(user));
+
+                    return await _usersTable.DeleteAsync(user);
+                }
+
+                public void Dispose()
+                {
+                }
+
+                public async Task<ApplicationUser> FindByIdAsync(string userId, 
+                    CancellationToken cancellationToken = default(CancellationToken))
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    if (userId == null) throw new ArgumentNullException(nameof(userId));
+                    Guid idGuid;
+                    if(!Guid.TryParse(userId, out idGuid))
+                    {
+                        throw new ArgumentException("Not a valid Guid id", nameof(userId));
+                    }
+
+                    return await _usersTable.FindByIdAsync(idGuid);
+
+                }
+
+                public async Task<ApplicationUser> FindByNameAsync(string userName, 
+                    CancellationToken cancellationToken = default(CancellationToken))
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    if (userName == null) throw new ArgumentNullException(nameof(userName));
+
+                    return await _usersTable.FindByNameAsync(userName);
+                }
+
+                public Task<string> GetNormalizedUserNameAsync(ApplicationUser user, CancellationToken cancellationToken)
+                {
+                    throw new NotImplementedException();
+                }
+
+                public Task<string> GetPasswordHashAsync(ApplicationUser user, CancellationToken cancellationToken)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    if (user == null) throw new ArgumentNullException(nameof(user));
+
+                    return Task.FromResult(user.PasswordHash);
+                }
+
+                public Task<string> GetUserIdAsync(ApplicationUser user, CancellationToken cancellationToken)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    if (user == null) throw new ArgumentNullException(nameof(user));
+
+                    return Task.FromResult(user.Id.ToString());
+                }
+
+                public Task<string> GetUserNameAsync(ApplicationUser user, CancellationToken cancellationToken)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    if (user == null) throw new ArgumentNullException(nameof(user));
+
+                    return Task.FromResult(user.UserName);
+                }
+
+                public Task<bool> HasPasswordAsync(ApplicationUser user, CancellationToken cancellationToken)
+                {
+                    throw new NotImplementedException();
+                }
+
+                public Task SetNormalizedUserNameAsync(ApplicationUser user, string normalizedName, CancellationToken cancellationToken)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    if (user == null) throw new ArgumentNullException(nameof(user));
+                    if (normalizedName == null) throw new ArgumentNullException(nameof(normalizedName));
+
+                    user.NormalizedUserName = normalizedName;
+                    return Task.FromResult<object>(null);
+                }
+
+                public Task SetPasswordHashAsync(ApplicationUser user, string passwordHash, CancellationToken cancellationToken)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    if (user == null) throw new ArgumentNullException(nameof(user));
+                    if (passwordHash == null) throw new ArgumentNullException(nameof(passwordHash));
+
+                    user.PasswordHash = passwordHash;
+                    return Task.FromResult<object>(null);
+
+                }
+
+                public Task SetUserNameAsync(ApplicationUser user, string userName, CancellationToken cancellationToken)
+                {
+                    throw new NotImplementedException();
+                }
+
+                public Task<IdentityResult> UpdateAsync(ApplicationUser user, CancellationToken cancellationToken)
+                {
+                    throw new NotImplementedException();
+                }
+            }
+        }
+    \end{lstlisting}
+
+    Within the UserStore class, we use the data access classes that we created
+    to perform operations. These are passed in using dependency injection. For
+    example, in the SQL Server with Dapper implementation, the UserStore class
+    has the CreateAsync method which uses an instance of DapperUsersTable to
+    insert a new record:
+
+    \lstset{style=sharpc}
+    \begin{lstlisting}
+        public async Task<IdentityResult> CreateAsync(ApplicationUser user)
+        {
+            string sql = "INSERT INTO dbo.CustomUser " +
+                "VALUES (@id, @Email, @EmailConfirmed, @PasswordHash, @UserName)";
+            
+            int rows = await _connection.ExecuteAsync(sql, new{user.Id, user.Email, user.EmailConfirmed, user.PasswordHas, user.UserName});
+            if(rows > 0)
+            {
+                return IdentityResult.Success;
+            }
+            return IdentityResult.Failed(new IdentityError{ Description = $"Could not insert user {user.Email}."});
+        }
+    \end{lstlisting}
+
+    \subsection{Interfaces to implement when customoizing user store}
+    \begin{itemize}
+        \item IUserStore\\
+        The IUserStore<TUser> interface is the only interface we must implement in the user store.
+        It defines methods for creating, updating, deleting and retrieving users.
+        \item IUserClaimStore\\
+        The IUserClaimStore<TUser> interface defines the methods we implement to enable user claims.
+        It contains methods for adding, removing and retrieving users.
+        \item IUserLoginStore\\
+        The IUserLoginStore<TUser> defines the methods we implement to enable external
+        authentication providers. It contains methods for adding, removing and retrieving
+        user logins, and a method for retrieving a user based on the login information.
+        \item IUserRoleStore\\
+        The IUserRoleStore<TUser> interface defines the methods we implement to map a user to
+        a role. It contains methods to add, remove, and retrieve a user's roles, and a method to
+        check if a user is assigned to a role.
+        \item IUserPasswordStore\\
+        The IUserPasswordStore<TUser> interface defines the methods we implement to persist
+        hashed passwords. It contains methods for getting and setting the hashed password, and
+        a method that indicates whether the user has set a password.
+        \item IUserSecurityStampStore\\
+        The IUserSecurityStampStore<TUser> interface defines the methods we implement
+        to use a security stamp for indicating whether the user's account information
+        has changed. This stamp is updated when a user changes the password, or adds
+        or removes logins. It contains methods for getting and setting the security
+        stamp.
+        \item IUserTwoFactorStore\\
+        The IUserTwoFactorStore<TUser> interface defines the methods we implement to
+        support two factor authentication. It contains methods for getting and setting
+        whether two factor authentication is enabled for a user.
+        \item IUserPhoneNumberStore\\
+        The IUserPhoneNumberStore<TUser> interface defines the methods we implement to
+        store user phone numbers. It contains methods for getting and setting the phone
+        number and whether the phone number is confirmed.
+        \item IUserEmailStore\\
+        The IUserEmailStore<TUser> interface defines the methods we implement to
+        store user email addresses. It contains methods for getting and setting
+        the email address and whether the email address is confirmed.
+        \item IUserLockoutStore\\
+        The IUserLockoutStoreM<TUser> interface defines the methods we implement to
+        store information about locking an account. It contains methods for tracking
+        failed access attempts and lockouts.
+        \item IQueryableUserStore\\
+        The IQueryableUserStore<TUser> interface defines the members
+        implement to provide a queryable user store.
+    \end{itemize}
+
+    We implement only the interfaces that are needed in our app. For example:
+    
+    \lstset{style=sharpc}
+    \begin{lstlisting}
+        public class UserStore: IUserStore<IdentityUser>,
+            IUserClaimStore<IdentityUser>,
+            IUserLoginStore<IdentityUser>,
+            IUserRoleStore<IdentityUser>,
+            IUserPasswordStore<IdentityUser>,
+            IUserSecurityStampStore<IdentityUser>
+        {
+            //interface implementations not shown
+        }
+    \end{lstlisting}
+
+    \subsection{IdentityUserClaim, IdentityUserLogin, and IdentityUserRole}
+    The Microsoft.AspNet.Identity.EntityFramework namespace contains implementations
+    of the IdentityUserClaim, IdentityUserLogin and IdentityUserRole classes. If we
+    are using these features, we may want to create our own versions of these classes
+    and define properties for our app. However, sometimes it is more efficient to not
+    load these entities into memory when performing basic operations (such as adding
+    or removing a user's claim). Instead, the backend store classes can execute these
+    operations directly on the data source. For example, the UserStore.GetClaimsAsync
+    method can call the userClaimTable.FindByUserId(user.Id) method to execute a query
+    on that table directly and return a list of claims.
+
+    \section{Customize the role class}
+    When implementing a role storage provider, we can create a custom role
+    type. It need not implement a particular interface, but it must have an Id
+    and typically it will have a Name property.
 \end{document}
