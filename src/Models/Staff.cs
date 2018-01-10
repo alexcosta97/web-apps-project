@@ -8,6 +8,7 @@ namespace src.Models
 {
     public class Staff : ApplicationUser
     {
+        public new int Id{get;set;}
         public int hoursContracted{get;set;}
         public string accountNumber{get;set;}
         public string sortCode{get;set;}
