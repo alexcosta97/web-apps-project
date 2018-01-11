@@ -10,7 +10,8 @@ namespace src.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
@@ -23,13 +24,13 @@ namespace src.Data
             // Add your customizations after calling base.OnModelCreating(builder);
         }
 
-        public DbSet<src.Models.Address> Address { get; set; }
+        public DbSet<Address> Address { get; set; }
 
-        public DbSet<src.Models.Favourite> Favourite { get; set; }
-        public DbSet<src.Models.Line> Line {get;set;}
-        public DbSet<src.Models.Route> Route{get;set;}
-        public DbSet<src.Models.RouteStop> RouteStop{get;set;}
-        public DbSet<src.Models.Staff> Staff{get;set;}
-        public DbSet<src.Models.Stop> Stop{get;set;}
+        public DbSet<Favourite> Favourite { get; set; }
+        public DbSet<Line> Line { get; set; }
+        public DbSet<Route> Route { get; set; }
+        public DbSet<RouteStop> RouteStop { get; set; }
+        public DbSet<Staff> Staff { get; set; }
+        public DbSet<Stop> Stop { get; set; }
     }
 }
