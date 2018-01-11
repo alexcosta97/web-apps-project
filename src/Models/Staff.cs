@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace src.Models
 {
-    public class Staff : ApplicationUser
+    public class Staff : IdentityUser
     {
         public int hoursContracted{get;set;}
         public string accountNumber{get;set;}
