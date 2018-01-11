@@ -29,7 +29,7 @@ namespace src.Data
         public DbSet<src.Models.Line> Line {get;set;}
         public DbSet<src.Models.Route> Route{get;set;}
         public DbSet<src.Models.RouteStop> RouteStop{get;set;}
-        public DbSet<src.Models.Staff> Staff{get;set;}
         public DbSet<src.Models.Stop> Stop{get;set;}
+        public DbSet<src.Models.Staff> Staff { get; set; }
     }
 }
