@@ -8,7 +8,7 @@ namespace src.Models
 {
     public class Staff
     {
-        public int Id{get;set;}
+        public int Id {get;set;}
         public string ownerID {get;set;}
         public int hoursContracted{get;set;}
         public string accountNumber{get;set;}

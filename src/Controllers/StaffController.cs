@@ -10,11 +10,11 @@ using src.Models;
 
 namespace src.Controllers
 {
-    public class Staff : Controller
+    public class StaffController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public Staff(ApplicationDbContext context)
+        public StaffController(ApplicationDbContext context)
         {
             _context = context;
         }
