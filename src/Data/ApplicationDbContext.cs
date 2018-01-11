@@ -26,7 +26,7 @@ namespace src.Data
         public DbSet<src.Models.Address> Address { get; set; }
 
         public DbSet<src.Models.Favourite> Favourite { get; set; }
-        public DbSet<src.Nodels.Line> Line {get;set;}
+        public DbSet<src.Models.Line> Line {get;set;}
         public DbSet<src.Models.Route> Route{get;set;}
         public DbSet<src.Models.RouteStop> RouteStop{get;set;}
         public DbSet<src.Models.Staff> Staff{get;set;}
