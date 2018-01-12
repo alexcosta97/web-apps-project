@@ -34,7 +34,7 @@ namespace src.Controllers
             }
 
             var staff = await _context.Staff
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == Convert.ToInt32(id));
             if (staff == null)
             {
                 return NotFound();
@@ -73,7 +73,7 @@ namespace src.Controllers
                 return NotFound();
             }
 
-            var staff = await _context.Staff.SingleOrDefaultAsync(m => m.Id == id);
+            var staff = await _context.Staff.SingleOrDefaultAsync(m => m.Id == Convert.ToInt32(id));
             if (staff == null)
             {
                 return NotFound();
@@ -88,7 +88,7 @@ namespace src.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,ownerID,hoursContracted,accountNumber,sortCode,nationalInsuranceNumber")] Staff staff)
         {
-            if (id != staff.Id)
+            if (Convert.ToInt32(id) != staff.Id)
             {
                 return NotFound();
             }
@@ -125,7 +125,7 @@ namespace src.Controllers
             }
 
             var staff = await _context.Staff
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == Convert.ToInt32(id));
             if (staff == null)
             {
                 return NotFound();
@@ -139,7 +139,7 @@ namespace src.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var staff = await _context.Staff.SingleOrDefaultAsync(m => m.Id == id);
+            var staff = await _context.Staff.SingleOrDefaultAsync(m => m.Id == Convert.ToInt32(id));
             _context.Staff.Remove(staff);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -147,7 +147,7 @@ namespace src.Controllers
 
         private bool StaffExists(int id)
         {
-            return _context.Staff.Any(e => e.Id == id);
+            return _context.Staff.Any(e => e.Id == Convert.ToInt32(id));
         }
     }
 }
