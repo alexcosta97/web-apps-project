@@ -6,12 +6,15 @@ using Microsoft.AspNetCore.Identity;
 
 namespace src.Models
 {
-    public class Staff : IdentityUser
+    public class Staff
     {
-        public int StaffID{get;set;}
+        public int Id {get;set;}
+        public string ownerID {get;set;}
         public int hoursContracted{get;set;}
         public string accountNumber{get;set;}
         public string sortCode{get;set;}
         public string nationalInsuranceNumber{get;set;}
+
+        public ApplicationUser appUser{get;set;}
     }
 }
