@@ -5,16 +5,15 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
-using Microsoft.EntityFrameworkCore.ValueGeneration;
 using src.Data;
 using src.Models;
 using System;
 
-namespace src.Data.Migrations
+namespace src.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180111122351_AddModels")]
-    partial class AddModels
+    [Migration("20180112143103_NewDB")]
+    partial class NewDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -161,9 +160,6 @@ namespace src.Data.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired();
-
                     b.Property<string>("Email")
                         .HasMaxLength(256);
 
@@ -202,8 +198,6 @@ namespace src.Data.Migrations
                         .HasName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("ApplicationUser");
                 });
 
             modelBuilder.Entity("src.Models.Favourite", b =>
@@ -253,7 +247,7 @@ namespace src.Data.Migrations
 
                     b.Property<int>("Direction");
 
-                    b.Property<string>("DriverId");
+                    b.Property<int?>("DriverId");
 
                     b.Property<int?>("LineId");
 
@@ -288,6 +282,30 @@ namespace src.Data.Migrations
                     b.ToTable("RouteStop");
                 });
 
+            modelBuilder.Entity("src.Models.Staff", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("accountNumber");
+
+                    b.Property<string>("appUserId");
+
+                    b.Property<int>("hoursContracted");
+
+                    b.Property<string>("nationalInsuranceNumber");
+
+                    b.Property<string>("ownerID");
+
+                    b.Property<string>("sortCode");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("appUserId");
+
+                    b.ToTable("Staff");
+                });
+
             modelBuilder.Entity("src.Models.Stop", b =>
                 {
                     b.Property<int>("Id")
@@ -306,23 +324,6 @@ namespace src.Data.Migrations
                     b.HasIndex("RouteId");
 
                     b.ToTable("Stop");
-                });
-
-            modelBuilder.Entity("src.Models.Staff", b =>
-                {
-                    b.HasBaseType("src.Models.ApplicationUser");
-
-                    b.Property<string>("accountNumber");
-
-                    b.Property<int>("hoursContracted");
-
-                    b.Property<string>("nationalInsuranceNumber");
-
-                    b.Property<string>("sortCode");
-
-                    b.ToTable("Staff");
-
-                    b.HasDiscriminator().HasValue("Staff");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -408,6 +409,13 @@ namespace src.Data.Migrations
                     b.HasOne("src.Models.Stop", "Stop")
                         .WithMany()
                         .HasForeignKey("StopId");
+                });
+
+            modelBuilder.Entity("src.Models.Staff", b =>
+                {
+                    b.HasOne("src.Models.ApplicationUser", "appUser")
+                        .WithMany()
+                        .HasForeignKey("appUserId");
                 });
 
             modelBuilder.Entity("src.Models.Stop", b =>

@@ -26,20 +26,11 @@ namespace src.Data
 
         public DbSet<Address> Address { get; set; }
 
-<<<<<<< HEAD
         public DbSet<Favourite> Favourite { get; set; }
         public DbSet<Line> Line { get; set; }
         public DbSet<Route> Route { get; set; }
         public DbSet<RouteStop> RouteStop { get; set; }
         public DbSet<Staff> Staff { get; set; }
         public DbSet<Stop> Stop { get; set; }
-=======
-        public DbSet<src.Models.Favourite> Favourite { get; set; }
-        public DbSet<src.Models.Line> Line {get;set;}
-        public DbSet<src.Models.Route> Route{get;set;}
-        public DbSet<src.Models.RouteStop> RouteStop{get;set;}
-        public DbSet<src.Models.Stop> Stop{get;set;}
-        public DbSet<src.Models.Staff> Staff { get; set; }
->>>>>>> master
     }
 }
