@@ -88,7 +88,7 @@ namespace src.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("hoursContracted,accountNumber,sortCode,nationalInsuranceNumber,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] Staff staff)
         {
-            if (id != staff.Id)
+            if (Convert.ToInt32(id) != staff.Id)
             {
                 return NotFound();
             }
