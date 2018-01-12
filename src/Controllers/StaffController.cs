@@ -10,11 +10,11 @@ using src.Models;
 
 namespace src.Controllers
 {
-    public class Staff : Controller
+    public class StaffController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public Staff(ApplicationDbContext context)
+        public StaffController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -26,7 +26,7 @@ namespace src.Controllers
         }
 
         // GET: Staff/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
@@ -54,7 +54,7 @@ namespace src.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("hoursContracted,accountNumber,sortCode,nationalInsuranceNumber,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] Staff staff)
+        public async Task<IActionResult> Create([Bind("Id,ownerID,hoursContracted,accountNumber,sortCode,nationalInsuranceNumber")] Staff staff)
         {
             if (ModelState.IsValid)
             {
@@ -66,7 +66,7 @@ namespace src.Controllers
         }
 
         // GET: Staff/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
@@ -86,7 +86,7 @@ namespace src.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("hoursContracted,accountNumber,sortCode,nationalInsuranceNumber,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] Staff staff)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ownerID,hoursContracted,accountNumber,sortCode,nationalInsuranceNumber")] Staff staff)
         {
             if (Convert.ToInt32(id) != staff.Id)
             {
@@ -117,7 +117,7 @@ namespace src.Controllers
         }
 
         // GET: Staff/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
@@ -137,7 +137,7 @@ namespace src.Controllers
         // POST: Staff/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var staff = await _context.Staff.SingleOrDefaultAsync(m => m.Id == Convert.ToInt32(id));
             _context.Staff.Remove(staff);
@@ -145,7 +145,7 @@ namespace src.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool StaffExists(string id)
+        private bool StaffExists(int id)
         {
             return _context.Staff.Any(e => e.Id == Convert.ToInt32(id));
         }
