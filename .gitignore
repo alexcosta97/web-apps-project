@@ -1,4 +1,5 @@
-*.min.{js,css}
+*.min.js
+*.min.css
 
 *.log
 ~$*.doc*
