@@ -1,7 +1,7 @@
 @model src.Models.Address
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Delete Addresses";
 }
 
 <h2>Delete</h2>
@@ -36,7 +36,7 @@
             @Html.DisplayFor(model => model.street2)
         </dd>
     </dl>
-    
+
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-default" /> |

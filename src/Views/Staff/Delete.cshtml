@@ -1,7 +1,7 @@
 @model src.Models.Staff
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Delete Staff";
 }
 
 <h2>Delete</h2>
@@ -42,7 +42,7 @@
             @Html.DisplayFor(model => model.nationalInsuranceNumber)
         </dd>
     </dl>
-    
+
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-default" /> |
