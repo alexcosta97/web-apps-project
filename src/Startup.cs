@@ -82,7 +82,7 @@ namespace src
             // dotnet user-secrets set SeedUserPW <pw>
             var testUserPw = Configuration["SeedUserPW"];
 
-            if(String.IsNullOrEmpty(testUserPw))
+           /* if(String.IsNullOrEmpty(testUserPw))
             {
                 throw new System.Exception("Use secrets manager to set SeedUserPW \n" +
                                             "dotnet user-secrets set SeedUserPW <pw>");
@@ -99,7 +99,7 @@ namespace src
                             "> dotnet ef database update"
                             + "\nIf that doesn't work, comment out SeedRoles and "
                             + "register a new user");
-            }
+            }*/
         }
     }
 }

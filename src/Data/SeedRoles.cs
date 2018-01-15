@@ -1,3 +1,4 @@
+/*
 #define SeedOnly
 #if SeedOnly
 
@@ -79,3 +80,4 @@ namespace src.Data
     }
 }
 #endif
+*/
