@@ -7,16 +7,23 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using src.Data;
 using src.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using src.Authorization;
 
 namespace src.Controllers
 {
     public class StaffController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IAuthorizationService _authorizationService;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public StaffController(ApplicationDbContext context)
+        public StaffController(ApplicationDbContext context, IAuthorizationService authorizationService, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
+            _authorizationService = authorizationService;
         }
 
         // GET: Staff

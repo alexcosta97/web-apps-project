@@ -10,7 +10,7 @@ namespace src.Models
     public class Staff
     {
         public int Id {get;set;}
-        [Display(Name="Staff ID")]
+        [Display(Name="Manager ID")]
         public string ownerID {get;set;}
         [Display(Name="Hours Contracted")]
         public int hoursContracted{get;set;}
