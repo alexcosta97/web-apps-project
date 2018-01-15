@@ -38,6 +38,25 @@ namespace src
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.Configure<IdentityOptions>(options =>
+            {
+                //Password settings
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 8;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequiredUniqueChars = 6;
+
+                //Lockout settings
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+                options.Lockout.MaxFailedAccessAttempts = 10;
+                options.Lockout.AllowedForNewUsers = true;
+
+                //User settings
+                options.User.RequireUniqueEmail = true;
+            });
+
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
 
