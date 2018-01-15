@@ -6,7 +6,10 @@ namespace src.Models
 {
     public enum Direction
     {
-        Inbound, Outbound
+        [Display(Name = "Inbound")]
+        Inbound,
+        [Display(Name = "Outbound")]
+        Outbound
     }
 
     public class Route
