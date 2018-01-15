@@ -32,7 +32,7 @@ namespace src.Authorization
                 return Task.FromResult(0);
             }
 
-            if(resource.appUser.Equals(_userManager.GetUserAsync(context.User)))
+            if(resource.appUser.Id.Equals(_userManager.GetUserAsync(context.User).Id))
             {
                 context.Succeed(requirement);
             }

@@ -63,13 +63,23 @@ namespace src.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ownerID,hoursContracted,accountNumber,sortCode,nationalInsuranceNumber")] Staff staff)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                _context.Add(staff);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return View(staff);
             }
-            return View(staff);
+
+            staff.ownerID = _userManager.GetUserId(User);
+
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, staff, UserOperations.Create);
+
+            if(!isAuthorized.Succeeded)
+            {
+                return new ChallengeResult();
+            }
+
+            _context.Add(staff);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
         }
 
         // GET: Staff/Edit/5
@@ -85,6 +95,14 @@ namespace src.Controllers
             {
                 return NotFound();
             }
+            
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, staff, UserOperations.Update);
+
+            if(!isAuthorized.Succeeded)
+            {
+                return new ChallengeResult();
+            }
+
             return View(staff);
         }
 
@@ -95,32 +113,32 @@ namespace src.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,ownerID,hoursContracted,accountNumber,sortCode,nationalInsuranceNumber")] Staff staff)
         {
-            if (Convert.ToInt32(id) != staff.Id)
+            if (id != staff.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(staff);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!StaffExists(staff.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                return View(staff);
             }
-            return View(staff);
+            
+            var toEdit = await _context.Staff.SingleOrDefaultAsync(m => m.Id == id);
+            if(toEdit == null)
+            {
+                return NotFound();
+            }
+
+            var isAuthorized = await _authorizationService.AuthorizeAsync(User, staff, UserOperations.Update);
+            if(!isAuthorized.Succeeded)
+            {
+                return new ChallengeResult();
+            }
+
+            _context.Update(staff);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
         }
 
         // GET: Staff/Delete/5
