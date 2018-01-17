@@ -9,7 +9,6 @@ using src.Data;
 using src.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using src.Authorization;
 
 namespace src.Controllers
 {
@@ -70,13 +69,6 @@ namespace src.Controllers
 
             staff.ownerID = _userManager.GetUserId(User);
 
-            var isAuthorized = await _authorizationService.AuthorizeAsync(User, staff, UserOperations.Create);
-
-            if(!isAuthorized.Succeeded)
-            {
-                return new ChallengeResult();
-            }
-
             _context.Add(staff);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
@@ -94,13 +86,6 @@ namespace src.Controllers
             if (staff == null)
             {
                 return NotFound();
-            }
-            
-            var isAuthorized = await _authorizationService.AuthorizeAsync(User, staff, UserOperations.Update);
-
-            if(!isAuthorized.Succeeded)
-            {
-                return new ChallengeResult();
             }
 
             return View(staff);
@@ -127,12 +112,6 @@ namespace src.Controllers
             if(toEdit == null)
             {
                 return NotFound();
-            }
-
-            var isAuthorized = await _authorizationService.AuthorizeAsync(User, staff, UserOperations.Update);
-            if(!isAuthorized.Succeeded)
-            {
-                return new ChallengeResult();
             }
 
             _context.Update(staff);

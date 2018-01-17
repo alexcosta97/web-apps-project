@@ -17,7 +17,7 @@ namespace src.Controllers
 
         public ViewResult Index() => View(roleManager.Roles);
 
-        public IActionResult Create => View();
+        public IActionResult Create() => View();
 
         [HttpPost]
         public async Task<IActionResult> Create([Required] string name)
