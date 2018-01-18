@@ -20,9 +20,41 @@ namespace src.Controllers
         }
 
         // GET: Lines
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
-            return View(await _context.Lines.ToListAsync());
+            ViewData["NameSortParam"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["StartSortParam"] = sortOrder == "Start" ? "start_desc" : "Start";
+            ViewData["EndSortParam"] = sortOrder == "End" ? "end_desc" : "End";
+            ViewData["CurrentFilter"] = searchString;
+
+            var lines = from s in _context.Lines
+                        select s;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                lines = lines.Where(s => s.Name.ToLower().Contains(searchString.ToLower()));
+            }
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    lines = lines.OrderByDescending(s => s.Name);
+                    break;
+                case "Start":
+                    lines = lines.OrderBy(s => s.Start);
+                    break;
+                case "start_desc":
+                    lines = lines.OrderByDescending(s => s.Start);
+                    break;
+                case "End":
+                    lines = lines.OrderBy(s => s.End);
+                    break;
+                case "end_desc":
+                    lines = lines.OrderByDescending(s => s.End);
+                    break;
+                default:
+                    lines = lines.OrderBy(s => s.Name);
+                    break;
+            }
+            return View(await lines.AsNoTracking().ToListAsync());
         }
 
         // GET: Lines/Details/5
