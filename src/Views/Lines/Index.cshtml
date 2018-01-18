@@ -6,7 +6,7 @@
 
 <h2>Lines</h2>
 
-@if (User.IsInRole("Manager")) {
+@if (User.IsInRole("Manager") || User.IsInRole("Admin")) {
     <p>
         <a asp-action="Create">Create New</a>
     </p>
