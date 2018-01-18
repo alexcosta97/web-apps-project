@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] :: @Constants.BusCompany</title>
+    <title>@ViewData["Title"] - src</title>
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -26,21 +26,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">@Constants.BusCompany</a>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">src</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Routes" asp-action="Index">Routes</a></li>
-                    <li><a asp-area="" asp-controller="Lines" asp-action="Index">Lines</a></li>
-                    @if(User.IsInRole("Manager") || User.IsInRole("Admin")){
-                        <li><a asp-area="" asp-controller="RouteStops" asp-action="Index">Routes and Stops</a></li>
-                        <li><a asp-area="" asp-controller="Stops" asp-action="Index">Stops</a></li>
-                        <li><a asp-area="" asp-controller="Staff" asp-action="Index">Staff</a></li>
-                    }
-                    @if(User.IsInRole("Admin")){
-                        <li><a asp-area="" asp-controller="Admin" asp-action="Index">Admin</a></li>
-                        <li><a asp-area="" asp-controller="RoleAdmin" asp-action="Index">Role Admin</a></li>
-                    }
+                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
                 </ul>
@@ -52,7 +42,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2018 - @Constants.BusCompany</p>
+            <p>&copy; 2018 - src</p>
         </footer>
     </div>
 

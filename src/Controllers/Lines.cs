@@ -20,41 +20,9 @@ namespace src.Controllers
         }
 
         // GET: Lines
-        public async Task<IActionResult> Index(string sortOrder, string searchString)
+        public async Task<IActionResult> Index()
         {
-            ViewData["NameSortParam"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewData["StartSortParam"] = sortOrder == "Start" ? "start_desc" : "Start";
-            ViewData["EndSortParam"] = sortOrder == "End" ? "end_desc" : "End";
-            ViewData["CurrentFilter"] = searchString;
-
-            var lines = from s in _context.Line
-                        select s;
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                lines = lines.Where(s => s.Name.ToLower().Contains(searchString.ToLower()));
-            }
-            switch (sortOrder)
-            {
-                case "name_desc":
-                    lines = lines.OrderByDescending(s => s.Name);
-                    break;
-                case "Start":
-                    lines = lines.OrderBy(s => s.Start);
-                    break;
-                case "start_desc":
-                    lines = lines.OrderByDescending(s => s.Start);
-                    break;
-                case "End":
-                    lines = lines.OrderBy(s => s.End);
-                    break;
-                case "end_desc":
-                    lines = lines.OrderByDescending(s => s.End);
-                    break;
-                default:
-                    lines = lines.OrderBy(s => s.Name);
-                    break;
-            }
-            return View(await lines.AsNoTracking().ToListAsync());
+            return View(await _context.Lines.ToListAsync());
         }
 
         // GET: Lines/Details/5
@@ -65,8 +33,8 @@ namespace src.Controllers
                 return NotFound();
             }
 
-            var line = await _context.Line
-                .SingleOrDefaultAsync(m => m.Id == id);
+            var line = await _context.Lines
+                .SingleOrDefaultAsync(m => m.LineID == id);
             if (line == null)
             {
                 return NotFound();
@@ -86,7 +54,7 @@ namespace src.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Start,End")] Line line)
+        public async Task<IActionResult> Create([Bind("LineID,Name,Start,End")] Line line)
         {
             if (ModelState.IsValid)
             {
@@ -105,7 +73,7 @@ namespace src.Controllers
                 return NotFound();
             }
 
-            var line = await _context.Line.SingleOrDefaultAsync(m => m.Id == id);
+            var line = await _context.Lines.SingleOrDefaultAsync(m => m.LineID == id);
             if (line == null)
             {
                 return NotFound();
@@ -118,9 +86,9 @@ namespace src.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Start,End")] Line line)
+        public async Task<IActionResult> Edit(int id, [Bind("LineID,Name,Start,End")] Line line)
         {
-            if (id != line.Id)
+            if (id != line.LineID)
             {
                 return NotFound();
             }
@@ -134,7 +102,7 @@ namespace src.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!LineExists(line.Id))
+                    if (!LineExists(line.LineID))
                     {
                         return NotFound();
                     }
@@ -156,8 +124,8 @@ namespace src.Controllers
                 return NotFound();
             }
 
-            var line = await _context.Line
-                .SingleOrDefaultAsync(m => m.Id == id);
+            var line = await _context.Lines
+                .SingleOrDefaultAsync(m => m.LineID == id);
             if (line == null)
             {
                 return NotFound();
@@ -171,15 +139,15 @@ namespace src.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var line = await _context.Line.SingleOrDefaultAsync(m => m.Id == id);
-            _context.Line.Remove(line);
+            var line = await _context.Lines.SingleOrDefaultAsync(m => m.LineID == id);
+            _context.Lines.Remove(line);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool LineExists(int id)
         {
-            return _context.Line.Any(e => e.Id == id);
+            return _context.Lines.Any(e => e.LineID == id);
         }
     }
 }

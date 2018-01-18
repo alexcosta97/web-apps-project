@@ -1,13 +1,18 @@
 using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace src.Models
 {
     public class Favourite
     {
-        public int Id{get;set;}
+        public int FavouriteID{get;set;}
         public string Name{get;set;}
-        public Route Route{get;set;}
+        [Display(Name="Route ID")]
+        public int? RouteID{get;set;}
+        [Display(Name="Line ID")]
+        public int? LineID{get;set;}
+
+        public Route route{get;set;}
         public Line Line{get;set;}
     }
 }

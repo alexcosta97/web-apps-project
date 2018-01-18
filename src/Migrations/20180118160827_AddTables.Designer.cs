@@ -12,8 +12,8 @@ using System;
 namespace src.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180118140447_dbChange")]
-    partial class dbChange
+    [Migration("20180118160827_AddTables")]
+    partial class AddTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -130,10 +130,10 @@ namespace src.Migrations
 
             modelBuilder.Entity("src.Models.Address", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("AddressID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ApplicationUserId");
+                    b.Property<string>("ApplicationUserID");
 
                     b.Property<string>("county");
 
@@ -143,11 +143,11 @@ namespace src.Migrations
 
                     b.Property<string>("street2");
 
-                    b.HasKey("Id");
+                    b.HasKey("AddressID");
 
-                    b.HasIndex("ApplicationUserId");
+                    b.HasIndex("ApplicationUserID");
 
-                    b.ToTable("Address");
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("src.Models.ApplicationUser", b =>
@@ -202,27 +202,31 @@ namespace src.Migrations
 
             modelBuilder.Entity("src.Models.Favourite", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("FavouriteID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("LineId");
+                    b.Property<string>("ApplicationUserId");
+
+                    b.Property<int?>("LineID");
 
                     b.Property<string>("Name");
 
-                    b.Property<int?>("RouteId");
+                    b.Property<int?>("RouteID");
 
-                    b.HasKey("Id");
+                    b.HasKey("FavouriteID");
 
-                    b.HasIndex("LineId");
+                    b.HasIndex("ApplicationUserId");
 
-                    b.HasIndex("RouteId");
+                    b.HasIndex("LineID");
 
-                    b.ToTable("Favourite");
+                    b.HasIndex("RouteID");
+
+                    b.ToTable("Favourites");
                 });
 
             modelBuilder.Entity("src.Models.Line", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("LineID")
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("End");
@@ -231,14 +235,14 @@ namespace src.Migrations
 
                     b.Property<DateTime>("Start");
 
-                    b.HasKey("Id");
+                    b.HasKey("LineID");
 
-                    b.ToTable("Line");
+                    b.ToTable("Lines");
                 });
 
             modelBuilder.Entity("src.Models.Route", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("RouteID")
                         .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("Arrival");
@@ -247,83 +251,83 @@ namespace src.Migrations
 
                     b.Property<int>("Direction");
 
-                    b.Property<int?>("DriverId");
+                    b.Property<string>("DriverID");
 
-                    b.Property<int?>("LineId");
+                    b.Property<int?>("DriverStaffID");
+
+                    b.Property<int>("LineID");
 
                     b.Property<string>("Name");
 
                     b.Property<string>("Note");
 
-                    b.HasKey("Id");
+                    b.HasKey("RouteID");
 
-                    b.HasIndex("DriverId");
+                    b.HasIndex("DriverStaffID");
 
-                    b.HasIndex("LineId");
+                    b.HasIndex("LineID");
 
-                    b.ToTable("Route");
+                    b.ToTable("Routes");
                 });
 
             modelBuilder.Entity("src.Models.RouteStop", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("RouteStopID")
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("RouteID");
 
                     b.Property<int>("StopID");
 
-                    b.HasKey("Id");
+                    b.HasKey("RouteStopID");
 
                     b.HasIndex("RouteID");
 
                     b.HasIndex("StopID");
 
-                    b.ToTable("RouteStop");
+                    b.ToTable("RouteStops");
                 });
 
             modelBuilder.Entity("src.Models.Staff", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("StaffID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("accountNumber");
+                    b.Property<string>("ApplicationUserID");
 
-                    b.Property<string>("appUserId");
+                    b.Property<string>("accountNumber");
 
                     b.Property<int>("hoursContracted");
 
                     b.Property<string>("nationalInsuranceNumber");
 
-                    b.Property<string>("ownerID");
-
                     b.Property<string>("sortCode");
 
-                    b.HasKey("Id");
+                    b.HasKey("StaffID");
 
-                    b.HasIndex("appUserId");
+                    b.HasIndex("ApplicationUserID");
 
                     b.ToTable("Staff");
                 });
 
             modelBuilder.Entity("src.Models.Stop", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("StopID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<double>("Latitude");
+                    b.Property<string>("Latitude");
 
-                    b.Property<double>("Longitude");
+                    b.Property<string>("Longitude");
 
                     b.Property<string>("Name");
 
-                    b.Property<int?>("RouteId");
+                    b.Property<int?>("RouteID");
 
-                    b.HasKey("Id");
+                    b.HasKey("StopID");
 
-                    b.HasIndex("RouteId");
+                    b.HasIndex("RouteID");
 
-                    b.ToTable("Stop");
+                    b.ToTable("Stops");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -374,30 +378,35 @@ namespace src.Migrations
             modelBuilder.Entity("src.Models.Address", b =>
                 {
                     b.HasOne("src.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("ApplicationUserId");
+                        .WithMany("Addresses")
+                        .HasForeignKey("ApplicationUserID");
                 });
 
             modelBuilder.Entity("src.Models.Favourite", b =>
                 {
+                    b.HasOne("src.Models.ApplicationUser")
+                        .WithMany("Favourites")
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("src.Models.Line", "Line")
                         .WithMany()
-                        .HasForeignKey("LineId");
+                        .HasForeignKey("LineID");
 
-                    b.HasOne("src.Models.Route", "Route")
+                    b.HasOne("src.Models.Route", "route")
                         .WithMany()
-                        .HasForeignKey("RouteId");
+                        .HasForeignKey("RouteID");
                 });
 
             modelBuilder.Entity("src.Models.Route", b =>
                 {
                     b.HasOne("src.Models.Staff", "Driver")
                         .WithMany()
-                        .HasForeignKey("DriverId");
+                        .HasForeignKey("DriverStaffID");
 
-                    b.HasOne("src.Models.Line", "Line")
+                    b.HasOne("src.Models.Line")
                         .WithMany("Routes")
-                        .HasForeignKey("LineId");
+                        .HasForeignKey("LineID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("src.Models.RouteStop", b =>
@@ -415,16 +424,16 @@ namespace src.Migrations
 
             modelBuilder.Entity("src.Models.Staff", b =>
                 {
-                    b.HasOne("src.Models.ApplicationUser", "appUser")
+                    b.HasOne("src.Models.ApplicationUser", "ApplicationUser")
                         .WithMany()
-                        .HasForeignKey("appUserId");
+                        .HasForeignKey("ApplicationUserID");
                 });
 
             modelBuilder.Entity("src.Models.Stop", b =>
                 {
                     b.HasOne("src.Models.Route")
                         .WithMany("Stops")
-                        .HasForeignKey("RouteId");
+                        .HasForeignKey("RouteID");
                 });
 #pragma warning restore 612, 618
         }

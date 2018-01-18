@@ -1,7 +1,7 @@
 @model src.Models.Favourite
 
 @{
-    ViewData["Title"] = "Edit Favourites";
+    ViewData["Title"] = "Edit";
 }
 
 <h2>Edit</h2>
@@ -12,11 +12,21 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="FavouriteID" />
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RouteID" class="control-label"></label>
+                <select asp-for="RouteID" class="form-control" asp-items="ViewBag.RouteID"></select>
+                <span asp-validation-for="RouteID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LineID" class="control-label"></label>
+                <select asp-for="LineID" class="form-control" asp-items="ViewBag.LineID"></select>
+                <span asp-validation-for="LineID" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />

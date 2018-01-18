@@ -1,7 +1,7 @@
 @model src.Models.Route
 
 @{
-    ViewData["Title"] = "Route";
+    ViewData["Title"] = "Details";
 }
 
 <h2>Details</h2>
@@ -10,6 +10,12 @@
     <h4>Route</h4>
     <hr />
     <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.DriverID)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DriverID)
+        </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Name)
         </dt>
@@ -43,8 +49,6 @@
     </dl>
 </div>
 <div>
-    @if(User.IsInRole("Manager") || User.IsInRole("Admin")){
-        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-    }
-    | <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.RouteID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
 </div>

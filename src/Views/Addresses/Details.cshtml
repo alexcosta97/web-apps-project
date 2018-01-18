@@ -1,7 +1,7 @@
 @model src.Models.Address
 
 @{
-    ViewData["Title"] = "Address";
+    ViewData["Title"] = "Details";
 }
 
 <h2>Details</h2>
@@ -34,9 +34,15 @@
         <dd>
             @Html.DisplayFor(model => model.street2)
         </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ApplicationUser)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ApplicationUser.Id)
+        </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model.AddressID">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

@@ -1,10 +1,10 @@
 @model IEnumerable<src.Models.Staff>
 
 @{
-    ViewData["Title"] = "Staff";
+    ViewData["Title"] = "Index";
 }
 
-<h2>Staff</h2>
+<h2>Index</h2>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -12,9 +12,6 @@
 <table class="table">
     <thead>
         <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.ownerID)
-                </th>
                 <th>
                     @Html.DisplayNameFor(model => model.hoursContracted)
                 </th>
@@ -27,15 +24,15 @@
                 <th>
                     @Html.DisplayNameFor(model => model.nationalInsuranceNumber)
                 </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ApplicationUser)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ownerID)
-            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.hoursContracted)
             </td>
@@ -49,9 +46,12 @@
                 @Html.DisplayFor(modelItem => item.nationalInsuranceNumber)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                @Html.DisplayFor(modelItem => item.ApplicationUser.Id)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.StaffID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.StaffID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.StaffID">Delete</a>
             </td>
         </tr>
 }

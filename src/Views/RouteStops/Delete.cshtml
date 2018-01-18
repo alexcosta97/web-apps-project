@@ -15,18 +15,18 @@
             @Html.DisplayNameFor(model => model.Route)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Route.Id)
+            @Html.DisplayFor(model => model.Route.RouteID)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Stop)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Stop.Id)
+            @Html.DisplayFor(model => model.Stop.StopID)
         </dd>
     </dl>
     
     <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="RouteStopID" />
         <input type="submit" value="Delete" class="btn btn-default" /> |
         <a asp-action="Index">Back to List</a>
     </form>

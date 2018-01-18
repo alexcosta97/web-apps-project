@@ -1,7 +1,7 @@
 @model src.Models.Address
 
 @{
-    ViewData["Title"] = "Edit Addresses";
+    ViewData["Title"] = "Edit";
 }
 
 <h2>Edit</h2>
@@ -12,7 +12,7 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="AddressID" />
             <div class="form-group">
                 <label asp-for="county" class="control-label"></label>
                 <input asp-for="county" class="form-control" />
@@ -32,6 +32,11 @@
                 <label asp-for="street2" class="control-label"></label>
                 <input asp-for="street2" class="form-control" />
                 <span asp-validation-for="street2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ApplicationUserID" class="control-label"></label>
+                <select asp-for="ApplicationUserID" class="form-control" asp-items="ViewBag.ApplicationUserID"></select>
+                <span asp-validation-for="ApplicationUserID" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />

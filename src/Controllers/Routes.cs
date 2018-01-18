@@ -5,13 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authorization;
 using src.Data;
 using src.Models;
 
 namespace src.Controllers
 {
-    [Authorize(Roles="Manager, Admin")]
     public class Routes : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -21,39 +19,12 @@ namespace src.Controllers
             _context = context;
         }
 
-        [AllowAnonymous]
         // GET: Routes
-        public async Task<IActionResult> Index(string sortOrder, string searchString)
+        public async Task<IActionResult> Index()
         {
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
-            ViewData["CurrentFilter"] = searchString;
-
-            var routes = from s in _context.Route
-                        select s;
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                routes = routes.Where(s => s.Name.ToLower().Contains(searchString.ToLower())
-                                    || s.Note.ToLower().Contains(searchString.ToLower()));
-            }
-            switch (sortOrder)
-            {
-                case "name_desc":
-                    routes = routes.OrderByDescending(s => s.Name);
-                    break;
-                case "Date":
-                    routes = routes.OrderBy(s => s.Departure);
-                    break;
-                case "date_desc":
-                    routes = routes.OrderByDescending(s => s.Departure);
-                    break;
-                default:
-                    routes = routes.OrderBy(s => s.Name);
-                    break;
-            }
-            return View(await routes.AsNoTracking().ToListAsync());
+            return View(await _context.Routes.ToListAsync());
         }
-        [AllowAnonymous]
+
         // GET: Routes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -62,8 +33,8 @@ namespace src.Controllers
                 return NotFound();
             }
 
-            var route = await _context.Route
-                .SingleOrDefaultAsync(m => m.Id == id);
+            var route = await _context.Routes
+                .SingleOrDefaultAsync(m => m.RouteID == id);
             if (route == null)
             {
                 return NotFound();
@@ -83,7 +54,7 @@ namespace src.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Note,Departure,Arrival,Direction")] Route route)
+        public async Task<IActionResult> Create([Bind("RouteID,DriverID,LineID,Name,Note,Departure,Arrival,Direction")] Route route)
         {
             if (ModelState.IsValid)
             {
@@ -102,7 +73,7 @@ namespace src.Controllers
                 return NotFound();
             }
 
-            var route = await _context.Route.SingleOrDefaultAsync(m => m.Id == id);
+            var route = await _context.Routes.SingleOrDefaultAsync(m => m.RouteID == id);
             if (route == null)
             {
                 return NotFound();
@@ -115,9 +86,9 @@ namespace src.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Note,Departure,Arrival,Direction")] Route route)
+        public async Task<IActionResult> Edit(int id, [Bind("RouteID,DriverID,LineID,Name,Note,Departure,Arrival,Direction")] Route route)
         {
-            if (id != route.Id)
+            if (id != route.RouteID)
             {
                 return NotFound();
             }
@@ -131,7 +102,7 @@ namespace src.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RouteExists(route.Id))
+                    if (!RouteExists(route.RouteID))
                     {
                         return NotFound();
                     }
@@ -153,8 +124,8 @@ namespace src.Controllers
                 return NotFound();
             }
 
-            var route = await _context.Route
-                .SingleOrDefaultAsync(m => m.Id == id);
+            var route = await _context.Routes
+                .SingleOrDefaultAsync(m => m.RouteID == id);
             if (route == null)
             {
                 return NotFound();
@@ -168,15 +139,15 @@ namespace src.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var route = await _context.Route.SingleOrDefaultAsync(m => m.Id == id);
-            _context.Route.Remove(route);
+            var route = await _context.Routes.SingleOrDefaultAsync(m => m.RouteID == id);
+            _context.Routes.Remove(route);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool RouteExists(int id)
         {
-            return _context.Route.Any(e => e.Id == id);
+            return _context.Routes.Any(e => e.RouteID == id);
         }
     }
 }

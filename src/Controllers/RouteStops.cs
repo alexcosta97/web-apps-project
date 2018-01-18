@@ -22,7 +22,7 @@ namespace src.Controllers
         // GET: RouteStops
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.RouteStop.Include(r => r.Route).Include(r => r.Stop);
+            var applicationDbContext = _context.RouteStops.Include(r => r.Route).Include(r => r.Stop);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -34,10 +34,10 @@ namespace src.Controllers
                 return NotFound();
             }
 
-            var routeStop = await _context.RouteStop
+            var routeStop = await _context.RouteStops
                 .Include(r => r.Route)
                 .Include(r => r.Stop)
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.RouteStopID == id);
             if (routeStop == null)
             {
                 return NotFound();
@@ -49,8 +49,8 @@ namespace src.Controllers
         // GET: RouteStops/Create
         public IActionResult Create()
         {
-            ViewData["RouteID"] = new SelectList(_context.Route, "Id", "Id");
-            ViewData["StopID"] = new SelectList(_context.Stop, "Id", "Id");
+            ViewData["RouteID"] = new SelectList(_context.Routes, "RouteID", "RouteID");
+            ViewData["StopID"] = new SelectList(_context.Stops, "StopID", "StopID");
             return View();
         }
 
@@ -59,7 +59,7 @@ namespace src.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,RouteID,StopID")] RouteStop routeStop)
+        public async Task<IActionResult> Create([Bind("RouteStopID,RouteID,StopID")] RouteStop routeStop)
         {
             if (ModelState.IsValid)
             {
@@ -67,8 +67,8 @@ namespace src.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RouteID"] = new SelectList(_context.Route, "Id", "Id", routeStop.RouteID);
-            ViewData["StopID"] = new SelectList(_context.Stop, "Id", "Id", routeStop.StopID);
+            ViewData["RouteID"] = new SelectList(_context.Routes, "RouteID", "RouteID", routeStop.RouteID);
+            ViewData["StopID"] = new SelectList(_context.Stops, "StopID", "StopID", routeStop.StopID);
             return View(routeStop);
         }
 
@@ -80,13 +80,13 @@ namespace src.Controllers
                 return NotFound();
             }
 
-            var routeStop = await _context.RouteStop.SingleOrDefaultAsync(m => m.Id == id);
+            var routeStop = await _context.RouteStops.SingleOrDefaultAsync(m => m.RouteStopID == id);
             if (routeStop == null)
             {
                 return NotFound();
             }
-            ViewData["RouteID"] = new SelectList(_context.Route, "Id", "Id", routeStop.RouteID);
-            ViewData["StopID"] = new SelectList(_context.Stop, "Id", "Id", routeStop.StopID);
+            ViewData["RouteID"] = new SelectList(_context.Routes, "RouteID", "RouteID", routeStop.RouteID);
+            ViewData["StopID"] = new SelectList(_context.Stops, "StopID", "StopID", routeStop.StopID);
             return View(routeStop);
         }
 
@@ -95,9 +95,9 @@ namespace src.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,RouteID,StopID")] RouteStop routeStop)
+        public async Task<IActionResult> Edit(int id, [Bind("RouteStopID,RouteID,StopID")] RouteStop routeStop)
         {
-            if (id != routeStop.Id)
+            if (id != routeStop.RouteStopID)
             {
                 return NotFound();
             }
@@ -111,7 +111,7 @@ namespace src.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RouteStopExists(routeStop.Id))
+                    if (!RouteStopExists(routeStop.RouteStopID))
                     {
                         return NotFound();
                     }
@@ -122,8 +122,8 @@ namespace src.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RouteID"] = new SelectList(_context.Route, "Id", "Id", routeStop.RouteID);
-            ViewData["StopID"] = new SelectList(_context.Stop, "Id", "Id", routeStop.StopID);
+            ViewData["RouteID"] = new SelectList(_context.Routes, "RouteID", "RouteID", routeStop.RouteID);
+            ViewData["StopID"] = new SelectList(_context.Stops, "StopID", "StopID", routeStop.StopID);
             return View(routeStop);
         }
 
@@ -135,10 +135,10 @@ namespace src.Controllers
                 return NotFound();
             }
 
-            var routeStop = await _context.RouteStop
+            var routeStop = await _context.RouteStops
                 .Include(r => r.Route)
                 .Include(r => r.Stop)
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.RouteStopID == id);
             if (routeStop == null)
             {
                 return NotFound();
@@ -152,15 +152,15 @@ namespace src.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var routeStop = await _context.RouteStop.SingleOrDefaultAsync(m => m.Id == id);
-            _context.RouteStop.Remove(routeStop);
+            var routeStop = await _context.RouteStops.SingleOrDefaultAsync(m => m.RouteStopID == id);
+            _context.RouteStops.Remove(routeStop);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool RouteStopExists(int id)
         {
-            return _context.RouteStop.Any(e => e.Id == id);
+            return _context.RouteStops.Any(e => e.RouteStopID == id);
         }
     }
 }

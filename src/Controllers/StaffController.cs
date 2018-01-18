@@ -7,28 +7,23 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using src.Data;
 using src.Models;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 
 namespace src.Controllers
 {
     public class StaffController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly IAuthorizationService _authorizationService;
-        private readonly UserManager<ApplicationUser> _userManager;
 
-        public StaffController(ApplicationDbContext context, IAuthorizationService authorizationService, UserManager<ApplicationUser> userManager)
+        public StaffController(ApplicationDbContext context)
         {
             _context = context;
-            _userManager = userManager;
-            _authorizationService = authorizationService;
         }
 
         // GET: Staff
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Staff.ToListAsync());
+            var applicationDbContext = _context.Staff.Include(s => s.ApplicationUser);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Staff/Details/5
@@ -40,7 +35,8 @@ namespace src.Controllers
             }
 
             var staff = await _context.Staff
-                .SingleOrDefaultAsync(m => m.Id == Convert.ToInt32(id));
+                .Include(s => s.ApplicationUser)
+                .SingleOrDefaultAsync(m => m.StaffID == id);
             if (staff == null)
             {
                 return NotFound();
@@ -52,6 +48,7 @@ namespace src.Controllers
         // GET: Staff/Create
         public IActionResult Create()
         {
+            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
@@ -60,18 +57,16 @@ namespace src.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ownerID,hoursContracted,accountNumber,sortCode,nationalInsuranceNumber")] Staff staff)
+        public async Task<IActionResult> Create([Bind("StaffID,ApplicationUserID,hoursContracted,accountNumber,sortCode,nationalInsuranceNumber")] Staff staff)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(staff);
+                _context.Add(staff);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
-
-            staff.ownerID = _userManager.GetUserId(User);
-
-            _context.Add(staff);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
+            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", staff.ApplicationUserID);
+            return View(staff);
         }
 
         // GET: Staff/Edit/5
@@ -82,12 +77,12 @@ namespace src.Controllers
                 return NotFound();
             }
 
-            var staff = await _context.Staff.SingleOrDefaultAsync(m => m.Id == Convert.ToInt32(id));
+            var staff = await _context.Staff.SingleOrDefaultAsync(m => m.StaffID == id);
             if (staff == null)
             {
                 return NotFound();
             }
-
+            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", staff.ApplicationUserID);
             return View(staff);
         }
 
@@ -96,28 +91,35 @@ namespace src.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ownerID,hoursContracted,accountNumber,sortCode,nationalInsuranceNumber")] Staff staff)
+        public async Task<IActionResult> Edit(int id, [Bind("StaffID,ApplicationUserID,hoursContracted,accountNumber,sortCode,nationalInsuranceNumber")] Staff staff)
         {
-            if (id != staff.Id)
+            if (id != staff.StaffID)
             {
                 return NotFound();
             }
 
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(staff);
+                try
+                {
+                    _context.Update(staff);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!StaffExists(staff.StaffID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
             }
-            
-            var toEdit = await _context.Staff.SingleOrDefaultAsync(m => m.Id == id);
-            if(toEdit == null)
-            {
-                return NotFound();
-            }
-
-            _context.Update(staff);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("Index");
+            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", staff.ApplicationUserID);
+            return View(staff);
         }
 
         // GET: Staff/Delete/5
@@ -129,7 +131,8 @@ namespace src.Controllers
             }
 
             var staff = await _context.Staff
-                .SingleOrDefaultAsync(m => m.Id == Convert.ToInt32(id));
+                .Include(s => s.ApplicationUser)
+                .SingleOrDefaultAsync(m => m.StaffID == id);
             if (staff == null)
             {
                 return NotFound();
@@ -143,7 +146,7 @@ namespace src.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var staff = await _context.Staff.SingleOrDefaultAsync(m => m.Id == Convert.ToInt32(id));
+            var staff = await _context.Staff.SingleOrDefaultAsync(m => m.StaffID == id);
             _context.Staff.Remove(staff);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
@@ -151,7 +154,7 @@ namespace src.Controllers
 
         private bool StaffExists(int id)
         {
-            return _context.Staff.Any(e => e.Id == Convert.ToInt32(id));
+            return _context.Staff.Any(e => e.StaffID == id);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace src.Models
 {
     public class Line
     {
-        public int Id{get;set;}
+        public int LineID{get;set;}
         public string Name{get;set;}
         [DataType(DataType.Date)]
         public DateTime Start{get;set;}

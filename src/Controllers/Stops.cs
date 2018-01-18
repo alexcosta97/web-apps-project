@@ -22,7 +22,7 @@ namespace src.Controllers
         // GET: Stops
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Stop.ToListAsync());
+            return View(await _context.Stops.ToListAsync());
         }
 
         // GET: Stops/Details/5
@@ -33,8 +33,8 @@ namespace src.Controllers
                 return NotFound();
             }
 
-            var stop = await _context.Stop
-                .SingleOrDefaultAsync(m => m.Id == id);
+            var stop = await _context.Stops
+                .SingleOrDefaultAsync(m => m.StopID == id);
             if (stop == null)
             {
                 return NotFound();
@@ -54,7 +54,7 @@ namespace src.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Longitude,Latitude")] Stop stop)
+        public async Task<IActionResult> Create([Bind("StopID,Name,Longitude,Latitude")] Stop stop)
         {
             if (ModelState.IsValid)
             {
@@ -73,7 +73,7 @@ namespace src.Controllers
                 return NotFound();
             }
 
-            var stop = await _context.Stop.SingleOrDefaultAsync(m => m.Id == id);
+            var stop = await _context.Stops.SingleOrDefaultAsync(m => m.StopID == id);
             if (stop == null)
             {
                 return NotFound();
@@ -86,9 +86,9 @@ namespace src.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Longitude,Latitude")] Stop stop)
+        public async Task<IActionResult> Edit(int id, [Bind("StopID,Name,Longitude,Latitude")] Stop stop)
         {
-            if (id != stop.Id)
+            if (id != stop.StopID)
             {
                 return NotFound();
             }
@@ -102,7 +102,7 @@ namespace src.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!StopExists(stop.Id))
+                    if (!StopExists(stop.StopID))
                     {
                         return NotFound();
                     }
@@ -124,8 +124,8 @@ namespace src.Controllers
                 return NotFound();
             }
 
-            var stop = await _context.Stop
-                .SingleOrDefaultAsync(m => m.Id == id);
+            var stop = await _context.Stops
+                .SingleOrDefaultAsync(m => m.StopID == id);
             if (stop == null)
             {
                 return NotFound();
@@ -139,15 +139,15 @@ namespace src.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var stop = await _context.Stop.SingleOrDefaultAsync(m => m.Id == id);
-            _context.Stop.Remove(stop);
+            var stop = await _context.Stops.SingleOrDefaultAsync(m => m.StopID == id);
+            _context.Stops.Remove(stop);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool StopExists(int id)
         {
-            return _context.Stop.Any(e => e.Id == id);
+            return _context.Stops.Any(e => e.StopID == id);
         }
     }
 }

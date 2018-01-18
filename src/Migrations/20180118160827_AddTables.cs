@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace src.Migrations
 {
-    public partial class dbChange : Migration
+    public partial class AddTables : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -48,10 +48,10 @@ namespace src.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Line",
+                name: "Lines",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    LineID = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     End = table.Column<DateTime>(nullable: false),
                     Name = table.Column<string>(nullable: true),
@@ -59,7 +59,7 @@ namespace src.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Line", x => x.Id);
+                    table.PrimaryKey("PK_Lines", x => x.LineID);
                 });
 
             migrationBuilder.CreateTable(
@@ -84,12 +84,12 @@ namespace src.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Address",
+                name: "Addresses",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    AddressID = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    ApplicationUserId = table.Column<string>(nullable: true),
+                    ApplicationUserID = table.Column<string>(nullable: true),
                     county = table.Column<string>(nullable: true),
                     postCode = table.Column<string>(nullable: true),
                     street1 = table.Column<string>(nullable: true),
@@ -97,10 +97,10 @@ namespace src.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Address", x => x.Id);
+                    table.PrimaryKey("PK_Addresses", x => x.AddressID);
                     table.ForeignKey(
-                        name: "FK_Address_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
+                        name: "FK_Addresses_AspNetUsers_ApplicationUserID",
+                        column: x => x.ApplicationUserID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -195,136 +195,143 @@ namespace src.Migrations
                 name: "Staff",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    StaffID = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    ApplicationUserID = table.Column<string>(nullable: true),
                     accountNumber = table.Column<string>(nullable: true),
-                    appUserId = table.Column<string>(nullable: true),
                     hoursContracted = table.Column<int>(nullable: false),
                     nationalInsuranceNumber = table.Column<string>(nullable: true),
-                    ownerID = table.Column<string>(nullable: true),
                     sortCode = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Staff", x => x.Id);
+                    table.PrimaryKey("PK_Staff", x => x.StaffID);
                     table.ForeignKey(
-                        name: "FK_Staff_AspNetUsers_appUserId",
-                        column: x => x.appUserId,
+                        name: "FK_Staff_AspNetUsers_ApplicationUserID",
+                        column: x => x.ApplicationUserID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Route",
+                name: "Routes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    RouteID = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Arrival = table.Column<DateTime>(nullable: false),
                     Departure = table.Column<DateTime>(nullable: false),
                     Direction = table.Column<int>(nullable: false),
-                    DriverId = table.Column<int>(nullable: true),
-                    LineId = table.Column<int>(nullable: true),
+                    DriverID = table.Column<string>(nullable: true),
+                    DriverStaffID = table.Column<int>(nullable: true),
+                    LineID = table.Column<int>(nullable: false),
                     Name = table.Column<string>(nullable: true),
                     Note = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Route", x => x.Id);
+                    table.PrimaryKey("PK_Routes", x => x.RouteID);
                     table.ForeignKey(
-                        name: "FK_Route_Staff_DriverId",
-                        column: x => x.DriverId,
+                        name: "FK_Routes_Staff_DriverStaffID",
+                        column: x => x.DriverStaffID,
                         principalTable: "Staff",
-                        principalColumn: "Id",
+                        principalColumn: "StaffID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Route_Line_LineId",
-                        column: x => x.LineId,
-                        principalTable: "Line",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        name: "FK_Routes_Lines_LineID",
+                        column: x => x.LineID,
+                        principalTable: "Lines",
+                        principalColumn: "LineID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Favourite",
+                name: "Favourites",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    FavouriteID = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    LineId = table.Column<int>(nullable: true),
+                    ApplicationUserId = table.Column<string>(nullable: true),
+                    LineID = table.Column<int>(nullable: true),
                     Name = table.Column<string>(nullable: true),
-                    RouteId = table.Column<int>(nullable: true)
+                    RouteID = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Favourite", x => x.Id);
+                    table.PrimaryKey("PK_Favourites", x => x.FavouriteID);
                     table.ForeignKey(
-                        name: "FK_Favourite_Line_LineId",
-                        column: x => x.LineId,
-                        principalTable: "Line",
+                        name: "FK_Favourites_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Favourite_Route_RouteId",
-                        column: x => x.RouteId,
-                        principalTable: "Route",
-                        principalColumn: "Id",
+                        name: "FK_Favourites_Lines_LineID",
+                        column: x => x.LineID,
+                        principalTable: "Lines",
+                        principalColumn: "LineID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Favourites_Routes_RouteID",
+                        column: x => x.RouteID,
+                        principalTable: "Routes",
+                        principalColumn: "RouteID",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Stop",
+                name: "Stops",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    StopID = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Latitude = table.Column<double>(nullable: false),
-                    Longitude = table.Column<double>(nullable: false),
+                    Latitude = table.Column<string>(nullable: true),
+                    Longitude = table.Column<string>(nullable: true),
                     Name = table.Column<string>(nullable: true),
-                    RouteId = table.Column<int>(nullable: true)
+                    RouteID = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Stop", x => x.Id);
+                    table.PrimaryKey("PK_Stops", x => x.StopID);
                     table.ForeignKey(
-                        name: "FK_Stop_Route_RouteId",
-                        column: x => x.RouteId,
-                        principalTable: "Route",
-                        principalColumn: "Id",
+                        name: "FK_Stops_Routes_RouteID",
+                        column: x => x.RouteID,
+                        principalTable: "Routes",
+                        principalColumn: "RouteID",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "RouteStop",
+                name: "RouteStops",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    RouteStopID = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     RouteID = table.Column<int>(nullable: false),
                     StopID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RouteStop", x => x.Id);
+                    table.PrimaryKey("PK_RouteStops", x => x.RouteStopID);
                     table.ForeignKey(
-                        name: "FK_RouteStop_Route_RouteID",
+                        name: "FK_RouteStops_Routes_RouteID",
                         column: x => x.RouteID,
-                        principalTable: "Route",
-                        principalColumn: "Id",
+                        principalTable: "Routes",
+                        principalColumn: "RouteID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RouteStop_Stop_StopID",
+                        name: "FK_RouteStops_Stops_StopID",
                         column: x => x.StopID,
-                        principalTable: "Stop",
-                        principalColumn: "Id",
+                        principalTable: "Stops",
+                        principalColumn: "StopID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Address_ApplicationUserId",
-                table: "Address",
-                column: "ApplicationUserId");
+                name: "IX_Addresses_ApplicationUserID",
+                table: "Addresses",
+                column: "ApplicationUserID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -364,50 +371,55 @@ namespace src.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Favourite_LineId",
-                table: "Favourite",
-                column: "LineId");
+                name: "IX_Favourites_ApplicationUserId",
+                table: "Favourites",
+                column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Favourite_RouteId",
-                table: "Favourite",
-                column: "RouteId");
+                name: "IX_Favourites_LineID",
+                table: "Favourites",
+                column: "LineID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Route_DriverId",
-                table: "Route",
-                column: "DriverId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Route_LineId",
-                table: "Route",
-                column: "LineId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RouteStop_RouteID",
-                table: "RouteStop",
+                name: "IX_Favourites_RouteID",
+                table: "Favourites",
                 column: "RouteID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RouteStop_StopID",
-                table: "RouteStop",
+                name: "IX_Routes_DriverStaffID",
+                table: "Routes",
+                column: "DriverStaffID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Routes_LineID",
+                table: "Routes",
+                column: "LineID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RouteStops_RouteID",
+                table: "RouteStops",
+                column: "RouteID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RouteStops_StopID",
+                table: "RouteStops",
                 column: "StopID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Staff_appUserId",
+                name: "IX_Staff_ApplicationUserID",
                 table: "Staff",
-                column: "appUserId");
+                column: "ApplicationUserID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Stop_RouteId",
-                table: "Stop",
-                column: "RouteId");
+                name: "IX_Stops_RouteID",
+                table: "Stops",
+                column: "RouteID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Address");
+                name: "Addresses");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -425,25 +437,25 @@ namespace src.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Favourite");
+                name: "Favourites");
 
             migrationBuilder.DropTable(
-                name: "RouteStop");
+                name: "RouteStops");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Stop");
+                name: "Stops");
 
             migrationBuilder.DropTable(
-                name: "Route");
+                name: "Routes");
 
             migrationBuilder.DropTable(
                 name: "Staff");
 
             migrationBuilder.DropTable(
-                name: "Line");
+                name: "Lines");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

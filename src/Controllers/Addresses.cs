@@ -10,11 +10,11 @@ using src.Models;
 
 namespace src.Controllers
 {
-    public class AddressesController : Controller
+    public class Addresses : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public AddressesController(ApplicationDbContext context)
+        public Addresses(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -22,7 +22,8 @@ namespace src.Controllers
         // GET: Addresses
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Address.ToListAsync());
+            var applicationDbContext = _context.Addresses.Include(a => a.ApplicationUser);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Addresses/Details/5
@@ -33,8 +34,9 @@ namespace src.Controllers
                 return NotFound();
             }
 
-            var address = await _context.Address
-                .SingleOrDefaultAsync(m => m.Id == id);
+            var address = await _context.Addresses
+                .Include(a => a.ApplicationUser)
+                .SingleOrDefaultAsync(m => m.AddressID == id);
             if (address == null)
             {
                 return NotFound();
@@ -46,15 +48,16 @@ namespace src.Controllers
         // GET: Addresses/Create
         public IActionResult Create()
         {
+            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
         // POST: Addresses/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,county,postCode,street1,street2")] Address address)
+        public async Task<IActionResult> Create([Bind("AddressID,county,postCode,street1,street2,ApplicationUserID")] Address address)
         {
             if (ModelState.IsValid)
             {
@@ -62,6 +65,7 @@ namespace src.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", address.ApplicationUserID);
             return View(address);
         }
 
@@ -73,22 +77,23 @@ namespace src.Controllers
                 return NotFound();
             }
 
-            var address = await _context.Address.SingleOrDefaultAsync(m => m.Id == id);
+            var address = await _context.Addresses.SingleOrDefaultAsync(m => m.AddressID == id);
             if (address == null)
             {
                 return NotFound();
             }
+            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", address.ApplicationUserID);
             return View(address);
         }
 
         // POST: Addresses/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,county,postCode,street1,street2")] Address address)
+        public async Task<IActionResult> Edit(int id, [Bind("AddressID,county,postCode,street1,street2,ApplicationUserID")] Address address)
         {
-            if (id != address.Id)
+            if (id != address.AddressID)
             {
                 return NotFound();
             }
@@ -102,7 +107,7 @@ namespace src.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AddressExists(address.Id))
+                    if (!AddressExists(address.AddressID))
                     {
                         return NotFound();
                     }
@@ -113,6 +118,7 @@ namespace src.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", address.ApplicationUserID);
             return View(address);
         }
 
@@ -124,8 +130,9 @@ namespace src.Controllers
                 return NotFound();
             }
 
-            var address = await _context.Address
-                .SingleOrDefaultAsync(m => m.Id == id);
+            var address = await _context.Addresses
+                .Include(a => a.ApplicationUser)
+                .SingleOrDefaultAsync(m => m.AddressID == id);
             if (address == null)
             {
                 return NotFound();
@@ -139,15 +146,15 @@ namespace src.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var address = await _context.Address.SingleOrDefaultAsync(m => m.Id == id);
-            _context.Address.Remove(address);
+            var address = await _context.Addresses.SingleOrDefaultAsync(m => m.AddressID == id);
+            _context.Addresses.Remove(address);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool AddressExists(int id)
         {
-            return _context.Address.Any(e => e.Id == id);
+            return _context.Addresses.Any(e => e.AddressID == id);
         }
     }
 }

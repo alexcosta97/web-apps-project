@@ -22,7 +22,8 @@ namespace src.Controllers
         // GET: Favourites
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Favourite.ToListAsync());
+            var applicationDbContext = _context.Favourites.Include(f => f.Line).Include(f => f.route);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: Favourites/Details/5
@@ -33,8 +34,10 @@ namespace src.Controllers
                 return NotFound();
             }
 
-            var favourite = await _context.Favourite
-                .SingleOrDefaultAsync(m => m.Id == id);
+            var favourite = await _context.Favourites
+                .Include(f => f.Line)
+                .Include(f => f.route)
+                .SingleOrDefaultAsync(m => m.FavouriteID == id);
             if (favourite == null)
             {
                 return NotFound();
@@ -46,6 +49,8 @@ namespace src.Controllers
         // GET: Favourites/Create
         public IActionResult Create()
         {
+            ViewData["LineID"] = new SelectList(_context.Lines, "LineID", "LineID");
+            ViewData["RouteID"] = new SelectList(_context.Routes, "RouteID", "RouteID");
             return View();
         }
 
@@ -54,7 +59,7 @@ namespace src.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Favourite favourite)
+        public async Task<IActionResult> Create([Bind("FavouriteID,Name,RouteID,LineID")] Favourite favourite)
         {
             if (ModelState.IsValid)
             {
@@ -62,6 +67,8 @@ namespace src.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["LineID"] = new SelectList(_context.Lines, "LineID", "LineID", favourite.LineID);
+            ViewData["RouteID"] = new SelectList(_context.Routes, "RouteID", "RouteID", favourite.RouteID);
             return View(favourite);
         }
 
@@ -73,11 +80,13 @@ namespace src.Controllers
                 return NotFound();
             }
 
-            var favourite = await _context.Favourite.SingleOrDefaultAsync(m => m.Id == id);
+            var favourite = await _context.Favourites.SingleOrDefaultAsync(m => m.FavouriteID == id);
             if (favourite == null)
             {
                 return NotFound();
             }
+            ViewData["LineID"] = new SelectList(_context.Lines, "LineID", "LineID", favourite.LineID);
+            ViewData["RouteID"] = new SelectList(_context.Routes, "RouteID", "RouteID", favourite.RouteID);
             return View(favourite);
         }
 
@@ -86,9 +95,9 @@ namespace src.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Favourite favourite)
+        public async Task<IActionResult> Edit(int id, [Bind("FavouriteID,Name,RouteID,LineID")] Favourite favourite)
         {
-            if (id != favourite.Id)
+            if (id != favourite.FavouriteID)
             {
                 return NotFound();
             }
@@ -102,7 +111,7 @@ namespace src.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!FavouriteExists(favourite.Id))
+                    if (!FavouriteExists(favourite.FavouriteID))
                     {
                         return NotFound();
                     }
@@ -113,6 +122,8 @@ namespace src.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["LineID"] = new SelectList(_context.Lines, "LineID", "LineID", favourite.LineID);
+            ViewData["RouteID"] = new SelectList(_context.Routes, "RouteID", "RouteID", favourite.RouteID);
             return View(favourite);
         }
 
@@ -124,8 +135,10 @@ namespace src.Controllers
                 return NotFound();
             }
 
-            var favourite = await _context.Favourite
-                .SingleOrDefaultAsync(m => m.Id == id);
+            var favourite = await _context.Favourites
+                .Include(f => f.Line)
+                .Include(f => f.route)
+                .SingleOrDefaultAsync(m => m.FavouriteID == id);
             if (favourite == null)
             {
                 return NotFound();
@@ -139,15 +152,15 @@ namespace src.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var favourite = await _context.Favourite.SingleOrDefaultAsync(m => m.Id == id);
-            _context.Favourite.Remove(favourite);
+            var favourite = await _context.Favourites.SingleOrDefaultAsync(m => m.FavouriteID == id);
+            _context.Favourites.Remove(favourite);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool FavouriteExists(int id)
         {
-            return _context.Favourite.Any(e => e.Id == id);
+            return _context.Favourites.Any(e => e.FavouriteID == id);
         }
     }
 }

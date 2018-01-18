@@ -1,7 +1,7 @@
 @model src.Models.Staff
 
 @{
-    ViewData["Title"] = "Staff";
+    ViewData["Title"] = "Details";
 }
 
 <h2>Details</h2>
@@ -10,12 +10,6 @@
     <h4>Staff</h4>
     <hr />
     <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.ownerID)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.ownerID)
-        </dd>
         <dt>
             @Html.DisplayNameFor(model => model.hoursContracted)
         </dt>
@@ -40,9 +34,15 @@
         <dd>
             @Html.DisplayFor(model => model.nationalInsuranceNumber)
         </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ApplicationUser)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ApplicationUser.Id)
+        </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model.StaffID">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

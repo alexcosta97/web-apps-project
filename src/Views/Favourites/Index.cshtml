@@ -1,10 +1,10 @@
 @model IEnumerable<src.Models.Favourite>
 
 @{
-    ViewData["Title"] = "Favourites";
+    ViewData["Title"] = "Index";
 }
 
-<h2>Favourites</h2>
+<h2>Index</h2>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -15,6 +15,12 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Name)
                 </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Line)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.route)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -25,9 +31,15 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                @Html.DisplayFor(modelItem => item.Line.LineID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.route.RouteID)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.FavouriteID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.FavouriteID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.FavouriteID">Delete</a>
             </td>
         </tr>
 }

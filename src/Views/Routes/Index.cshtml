@@ -1,38 +1,28 @@
 @model IEnumerable<src.Models.Route>
 
 @{
-    ViewData["Title"] = "Routes";
+    ViewData["Title"] = "Index";
 }
 
-<h2>Routes</h2>
+<h2>Index</h2>
 
-@if (User.IsInRole("Manager")) {
-    <p>
-        <a asp-action="Create">Create New</a>
-    </p>
-}
-
-<form asp-action="Index" method="get">
-    <div class="form-actions no-color">
-        <p>
-            Find by name: <input type="text" name="SearchString" value="@ViewData["currentFilter"]" />
-            <input type="submit" value="Search" class="btn btn-default" /> |
-            <a asp-action="Index">Back to Full List</a>
-        </p>
-    </div>
-</form>
-
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
 <table class="table">
     <thead>
         <tr>
                 <th>
-                    <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">@Html.DisplayNameFor(model => model.Name)</a>
+                    @Html.DisplayNameFor(model => model.DriverID)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Note)
                 </th>
                 <th>
-                    <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]">@Html.DisplayNameFor(model => model.Departure)</a>
+                    @Html.DisplayNameFor(model => model.Departure)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Arrival)
@@ -46,6 +36,9 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DriverID)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
@@ -62,11 +55,9 @@
                 @Html.DisplayFor(modelItem => item.Direction)
             </td>
             <td>
-                @if(User.IsInRole("Manager") || User.IsInRole("Admin")){
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                }
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                <a asp-action="Edit" asp-route-id="@item.RouteID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.RouteID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.RouteID">Delete</a>
             </td>
         </tr>
 }

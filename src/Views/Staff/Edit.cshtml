@@ -1,7 +1,7 @@
 @model src.Models.Staff
 
 @{
-    ViewData["Title"] = "Edit Staff";
+    ViewData["Title"] = "Edit";
 }
 
 <h2>Edit</h2>
@@ -12,11 +12,11 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="StaffID" />
             <div class="form-group">
-                <label asp-for="ownerID" class="control-label"></label>
-                <input asp-for="ownerID" class="form-control" />
-                <span asp-validation-for="ownerID" class="text-danger"></span>
+                <label asp-for="ApplicationUserID" class="control-label"></label>
+                <select asp-for="ApplicationUserID" class="form-control" asp-items="ViewBag.ApplicationUserID"></select>
+                <span asp-validation-for="ApplicationUserID" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="hoursContracted" class="control-label"></label>

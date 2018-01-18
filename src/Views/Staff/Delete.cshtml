@@ -1,7 +1,7 @@
 @model src.Models.Staff
 
 @{
-    ViewData["Title"] = "Delete Staff";
+    ViewData["Title"] = "Delete";
 }
 
 <h2>Delete</h2>
@@ -11,12 +11,6 @@
     <h4>Staff</h4>
     <hr />
     <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.ownerID)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.ownerID)
-        </dd>
         <dt>
             @Html.DisplayNameFor(model => model.hoursContracted)
         </dt>
@@ -41,10 +35,16 @@
         <dd>
             @Html.DisplayFor(model => model.nationalInsuranceNumber)
         </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ApplicationUser)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ApplicationUser.Id)
+        </dd>
     </dl>
-
+    
     <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="StaffID" />
         <input type="submit" value="Delete" class="btn btn-default" /> |
         <a asp-action="Index">Back to List</a>
     </form>

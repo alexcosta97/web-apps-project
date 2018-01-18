@@ -14,17 +14,20 @@ namespace src.Models
 
     public class Route
     {
-        public int Id{get;set;}
+        public int RouteID{get;set;}
+        [Display(Name = "Driver ID")]
+        public string DriverID{get;set;}
+        [Display(Name = "Line ID")]
+        public int LineID{get;set;}
         public string Name{get;set;}
         public string Note{get;set;}
+        [DataType(DataType.DateTime)]
         public DateTime Departure{get;set;}
+        [DataType(DataType.DateTime)]
         public DateTime Arrival{get;set;}
-
         public Staff Driver{get;set;}
-        public Line Line{get;set;}
 
         public Direction Direction{get;set;}
-
         public ICollection<Stop> Stops{get;set;}
     }
 }
