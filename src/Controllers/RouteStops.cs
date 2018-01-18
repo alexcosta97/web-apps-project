@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using src.Models;
 
 namespace src.Controllers
 {
+    [Authorize(Roles="Manager")]
     public class RouteStops : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -46,6 +48,8 @@ namespace src.Controllers
         // GET: RouteStops/Create
         public IActionResult Create()
         {
+            ViewData["RouteID"] = new SelectList(_context.Route, "Id", "Route");
+            ViewData["StopID"] = new SelectList(_context.Stop, "Id", "Stop");
             return View();
         }
 
@@ -54,7 +58,7 @@ namespace src.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id")] RouteStop routeStop)
+        public async Task<IActionResult> Create([Bind("Id,RouteID,StopID")] RouteStop routeStop)
         {
             if (ModelState.IsValid)
             {
@@ -62,6 +66,8 @@ namespace src.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["RouteID"] = new SelectList(_context.Route, "Id", "Route", routeStop.RouteID);
+            ViewData["StopID"] = new SelectList(_context.Stop, "Id", "Stop", routeStop.StopID);
             return View(routeStop);
         }
 
