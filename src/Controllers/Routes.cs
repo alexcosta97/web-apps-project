@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using src.Data;
 using src.Models;
 
 namespace src.Controllers
 {
+    [Authorize(Roles="Manager, Admin")]
     public class Routes : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -19,12 +21,13 @@ namespace src.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
         // GET: Routes
         public async Task<IActionResult> Index()
         {
             return View(await _context.Route.ToListAsync());
         }
-
+        [AllowAnonymous]
         // GET: Routes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
