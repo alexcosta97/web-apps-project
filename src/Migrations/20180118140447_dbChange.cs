@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace src.Migrations
 {
-    public partial class NewDB : Migration
+    public partial class dbChange : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -301,24 +301,24 @@ namespace src.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    RouteId = table.Column<int>(nullable: true),
-                    StopId = table.Column<int>(nullable: true)
+                    RouteID = table.Column<int>(nullable: false),
+                    StopID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RouteStop", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RouteStop_Route_RouteId",
-                        column: x => x.RouteId,
+                        name: "FK_RouteStop_Route_RouteID",
+                        column: x => x.RouteID,
                         principalTable: "Route",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RouteStop_Stop_StopId",
-                        column: x => x.StopId,
+                        name: "FK_RouteStop_Stop_StopID",
+                        column: x => x.StopID,
                         principalTable: "Stop",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -384,14 +384,14 @@ namespace src.Migrations
                 column: "LineId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RouteStop_RouteId",
+                name: "IX_RouteStop_RouteID",
                 table: "RouteStop",
-                column: "RouteId");
+                column: "RouteID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RouteStop_StopId",
+                name: "IX_RouteStop_StopID",
                 table: "RouteStop",
-                column: "StopId");
+                column: "StopID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Staff_appUserId",

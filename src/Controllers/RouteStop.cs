@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,23 +10,23 @@ using src.Models;
 
 namespace src.Controllers
 {
-    [Authorize(Roles="Manager")]
-    public class RouteStops : Controller
+    public class RouteStop : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public RouteStops(ApplicationDbContext context)
+        public RouteStop(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: RouteStops
+        // GET: RouteStop
         public async Task<IActionResult> Index()
         {
-            return View(await _context.RouteStop.ToListAsync());
+            var applicationDbContext = _context.RouteStop.Include(r => r.Route).Include(r => r.Stop);
+            return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: RouteStops/Details/5
+        // GET: RouteStop/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -36,6 +35,8 @@ namespace src.Controllers
             }
 
             var routeStop = await _context.RouteStop
+                .Include(r => r.Route)
+                .Include(r => r.Stop)
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (routeStop == null)
             {
@@ -45,15 +46,15 @@ namespace src.Controllers
             return View(routeStop);
         }
 
-        // GET: RouteStops/Create
+        // GET: RouteStop/Create
         public IActionResult Create()
         {
-            ViewData["RouteID"] = new SelectList(_context.Route, "Id", "Route");
-            ViewData["StopID"] = new SelectList(_context.Stop, "Id", "Stop");
+            ViewData["RouteID"] = new SelectList(_context.Route, "Id", "Id");
+            ViewData["StopID"] = new SelectList(_context.Stop, "Id", "Id");
             return View();
         }
 
-        // POST: RouteStops/Create
+        // POST: RouteStop/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -66,12 +67,12 @@ namespace src.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RouteID"] = new SelectList(_context.Route, "Id", "Route", routeStop.RouteID);
-            ViewData["StopID"] = new SelectList(_context.Stop, "Id", "Stop", routeStop.StopID);
+            ViewData["RouteID"] = new SelectList(_context.Route, "Id", "Id", routeStop.RouteID);
+            ViewData["StopID"] = new SelectList(_context.Stop, "Id", "Id", routeStop.StopID);
             return View(routeStop);
         }
 
-        // GET: RouteStops/Edit/5
+        // GET: RouteStop/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -84,15 +85,17 @@ namespace src.Controllers
             {
                 return NotFound();
             }
+            ViewData["RouteID"] = new SelectList(_context.Route, "Id", "Id", routeStop.RouteID);
+            ViewData["StopID"] = new SelectList(_context.Stop, "Id", "Id", routeStop.StopID);
             return View(routeStop);
         }
 
-        // POST: RouteStops/Edit/5
+        // POST: RouteStop/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id")] RouteStop routeStop)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,RouteID,StopID")] RouteStop routeStop)
         {
             if (id != routeStop.Id)
             {
@@ -119,10 +122,12 @@ namespace src.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["RouteID"] = new SelectList(_context.Route, "Id", "Id", routeStop.RouteID);
+            ViewData["StopID"] = new SelectList(_context.Stop, "Id", "Id", routeStop.StopID);
             return View(routeStop);
         }
 
-        // GET: RouteStops/Delete/5
+        // GET: RouteStop/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -131,6 +136,8 @@ namespace src.Controllers
             }
 
             var routeStop = await _context.RouteStop
+                .Include(r => r.Route)
+                .Include(r => r.Stop)
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (routeStop == null)
             {
@@ -140,7 +147,7 @@ namespace src.Controllers
             return View(routeStop);
         }
 
-        // POST: RouteStops/Delete/5
+        // POST: RouteStop/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

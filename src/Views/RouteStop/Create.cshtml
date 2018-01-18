@@ -1,7 +1,7 @@
 @model src.Models.RouteStop
 
 @{
-    ViewData["Title"] = "Create Route Stops";
+    ViewData["Title"] = "Create";
 }
 
 <h2>Create</h2>
@@ -14,7 +14,11 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="RouteID" class="control-label"></label>
-                <select asp-for="RouteID" class="form-control" asp-items="@ViewData["RouteID"]"></select>
+                <select asp-for="RouteID" class ="form-control" asp-items="ViewBag.RouteID"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="StopID" class="control-label"></label>
+                <select asp-for="StopID" class ="form-control" asp-items="ViewBag.StopID"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />

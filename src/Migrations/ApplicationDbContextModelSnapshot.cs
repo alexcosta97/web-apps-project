@@ -268,15 +268,15 @@ namespace src.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("RouteId");
+                    b.Property<int>("RouteID");
 
-                    b.Property<int?>("StopId");
+                    b.Property<int>("StopID");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RouteId");
+                    b.HasIndex("RouteID");
 
-                    b.HasIndex("StopId");
+                    b.HasIndex("StopID");
 
                     b.ToTable("RouteStop");
                 });
@@ -403,11 +403,13 @@ namespace src.Migrations
                 {
                     b.HasOne("src.Models.Route", "Route")
                         .WithMany()
-                        .HasForeignKey("RouteId");
+                        .HasForeignKey("RouteID")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("src.Models.Stop", "Stop")
                         .WithMany()
-                        .HasForeignKey("StopId");
+                        .HasForeignKey("StopID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("src.Models.Staff", b =>
