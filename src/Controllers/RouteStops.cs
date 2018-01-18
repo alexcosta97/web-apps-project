@@ -10,27 +10,23 @@ using src.Models;
 
 namespace src.Controllers
 {
-<<<<<<< Updated upstream:src/Controllers/RouteStop.cs
-    public class RouteStop : Controller
-=======
     public class RouteStops : Controller
->>>>>>> Stashed changes:src/Controllers/RouteStops.cs
     {
         private readonly ApplicationDbContext _context;
 
-        public RouteStop(ApplicationDbContext context)
+        public RouteStops(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: RouteStop
+        // GET: RouteStops
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.RouteStop.Include(r => r.Route).Include(r => r.Stop);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: RouteStop/Details/5
+        // GET: RouteStops/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -50,7 +46,7 @@ namespace src.Controllers
             return View(routeStop);
         }
 
-        // GET: RouteStop/Create
+        // GET: RouteStops/Create
         public IActionResult Create()
         {
             ViewData["RouteID"] = new SelectList(_context.Route, "Id", "Id");
@@ -58,7 +54,7 @@ namespace src.Controllers
             return View();
         }
 
-        // POST: RouteStop/Create
+        // POST: RouteStops/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -76,7 +72,7 @@ namespace src.Controllers
             return View(routeStop);
         }
 
-        // GET: RouteStop/Edit/5
+        // GET: RouteStops/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -94,7 +90,7 @@ namespace src.Controllers
             return View(routeStop);
         }
 
-        // POST: RouteStop/Edit/5
+        // POST: RouteStops/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -131,7 +127,7 @@ namespace src.Controllers
             return View(routeStop);
         }
 
-        // GET: RouteStop/Delete/5
+        // GET: RouteStops/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -151,7 +147,7 @@ namespace src.Controllers
             return View(routeStop);
         }
 
-        // POST: RouteStop/Delete/5
+        // POST: RouteStops/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
