@@ -34,6 +34,7 @@
                     <li><a asp-area="" asp-controller="Lines" asp-action="Index">Lines</a></li>
                     @if(User.IsInRole("Manager") || User.IsInRole("Admin")){
                         <li><a asp-area="" asp-controller="RouteStops" asp-action="Index">Routes and Stops</a></li>
+                        <li><a asp-area="" asp-controller="Stops" asp-action="Index">Stops</a></li>
                         <li><a asp-area="" asp-controller="Staff" asp-action="Index">Staff</a></li>
                     }
                     @if(User.IsInRole("Admin")){

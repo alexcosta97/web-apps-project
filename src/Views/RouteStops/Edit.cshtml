@@ -1,27 +1,30 @@
 @model src.Models.RouteStop
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
 }
 
-<h2>Create</h2>
+<h2>Edit</h2>
 
 <h4>RouteStop</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="RouteID" class="control-label"></label>
-                <select asp-for="RouteID" class ="form-control" asp-items="ViewBag.RouteID"></select>
+                <select asp-for="RouteID" class="form-control" asp-items="ViewBag.RouteID"></select>
+                <span asp-validation-for="RouteID" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="StopID" class="control-label"></label>
-                <select asp-for="StopID" class ="form-control" asp-items="ViewBag.StopID"></select>
+                <select asp-for="StopID" class="form-control" asp-items="ViewBag.StopID"></select>
+                <span asp-validation-for="StopID" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </form>
     </div>
