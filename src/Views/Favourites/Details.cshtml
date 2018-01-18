@@ -1,0 +1,36 @@
+@model src.Models.Favourite
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Favourite</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Line)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Line.LineID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.route)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.route.RouteID)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.FavouriteID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
