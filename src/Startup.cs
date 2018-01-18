@@ -91,6 +91,8 @@ namespace src
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             }); 
+
+            ApplicationDbContext.CreateAdminAccount(app.ApplicationServices, Configuration).Wait();
         }
     }
 }
