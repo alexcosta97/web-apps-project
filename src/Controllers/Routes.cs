@@ -74,6 +74,8 @@ namespace src.Controllers
         // GET: Routes/Create
         public IActionResult Create()
         {
+            ViewData["DriverID"] = new SelectList(_context.Staff, "StaffID", "StaffID");
+            ViewData["LineID"] = new SelectList(_context.Lines, "LineID", "LineID");
             return View();
         }
 
@@ -90,6 +92,8 @@ namespace src.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["DriverID"] = new SelectList(_context.Staff, "StaffID", "DriverID", route.DriverID);
+            ViewData["LineID"] = new SelectList(_context.Lines, "LineID", "LineID", route.LineID);
             return View(route);
         }
 
