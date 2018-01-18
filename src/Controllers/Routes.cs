@@ -22,6 +22,7 @@ namespace src.Controllers
         }
 
         // GET: Routes
+        [AllowAnonymous]
         public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
             ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
@@ -52,6 +53,7 @@ namespace src.Controllers
         }
 
         // GET: Routes/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)

@@ -26,13 +26,26 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">src</a>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">@Constants.BusCompany</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                    <li><a asp-area="" asp-controller="Routes" asp-action="Index">Routes</a></li>
+                    <li><a asp-area="" asp-controller="Lines" asp-action="Index">Lines</a></li>
+                    @if(User.Identity.IsAuthenticated){
+                        <li><a asp-area="" asp-controller="Addresses" asp-action="Index">Addresses</a></li>
+                    }
+                    @if(User.IsInRole("Manager") || User.IsInRole("Admin"))
+                    {
+                        <li><a asp-area="" asp-controller="RouteStops" asp-action="Index">Routes and Stops</a></li>
+                        <li><a asp-area="" asp-controller="Stops" asp-action="Index">Stops</a></li>
+                        <li><a asp-area="" asp-controller="Staff" asp-action="Index">Staff</a></li>
+                    }
+                    @if(User.IsInRole("Admin"))
+                    {
+                        <li><a asp-area="" asp-controller="Admin" asp-action="Index">Users Admin</a></li>
+                        <li><a asp-area="" asp-controller="RoleAdmin" asp-action="Index">Roles Admin</a></li>
+                    }
                 </ul>
                 @await Html.PartialAsync("_LoginPartial")
             </div>
@@ -42,7 +55,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2018 - src</p>
+            <p>&copy; 2018 - @Constants.BusCompany</p>
         </footer>
     </div>
 

@@ -71,8 +71,8 @@
             </td>
             <td>
                 @if(User.IsInRole("Manager") || User.IsInRole("Admin")){
-                <a asp-action="Edit" asp-route-id="@item.RouteID">Edit</a> |
-                <a asp-action="Delete" asp-route-id="@item.RouteID">Delete</a> |
+                <a asp-action="Edit" asp-route-id="@item.RouteID">Edit</a>
+                <a asp-action="Delete" asp-route-id="@item.RouteID">Delete</a>
                 }
                 <a asp-action="Details" asp-route-id="@item.RouteID">Details</a>
             </td>

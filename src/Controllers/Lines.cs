@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using src.Models;
 
 namespace src.Controllers
 {
+    [AllowAnonymous]
     public class Lines : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -76,6 +78,7 @@ namespace src.Controllers
         }
 
         // GET: Lines/Create
+        [Authorize(Roles = "Manager, Admin")]
         public IActionResult Create()
         {
             return View();
@@ -86,6 +89,7 @@ namespace src.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Manager, Admin")]
         public async Task<IActionResult> Create([Bind("LineID,Name,Start,End")] Line line)
         {
             if (ModelState.IsValid)
@@ -98,6 +102,7 @@ namespace src.Controllers
         }
 
         // GET: Lines/Edit/5
+        [Authorize(Roles="Manager, Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -118,6 +123,7 @@ namespace src.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles="Manager, Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("LineID,Name,Start,End")] Line line)
         {
             if (id != line.LineID)
@@ -149,6 +155,7 @@ namespace src.Controllers
         }
 
         // GET: Lines/Delete/5
+        [Authorize(Roles="Manager, Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -169,6 +176,7 @@ namespace src.Controllers
         // POST: Lines/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Manager, Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var line = await _context.Lines.SingleOrDefaultAsync(m => m.LineID == id);
