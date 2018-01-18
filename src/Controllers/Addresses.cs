@@ -48,7 +48,7 @@ namespace src.Controllers
         // GET: Addresses/Create
         public IActionResult Create()
         {
-            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "UserName", "UserName");
             return View();
         }
 
@@ -57,8 +57,10 @@ namespace src.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AddressID,county,postCode,street1,street2,ApplicationUserID")] Address address)
+        public async Task<IActionResult> Create([Bind("AddressID,county,postCode,street1,street2")] Address address, string ApplicationUserID)
         {
+            address.ApplicationUserID = _context.Users.Where(n => n.UserName == ApplicationUserID).SingleOrDefault().Id;
+
             if (ModelState.IsValid)
             {
                 _context.Add(address);

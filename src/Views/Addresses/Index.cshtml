@@ -1,4 +1,6 @@
+@using Microsoft.AspNetCore.Identity
 @model IEnumerable<src.Models.Address>
+@inject UserManager<ApplicationUser> UserManager
 
 @{
     ViewData["Title"] = "Adresses";
@@ -32,6 +34,7 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
+    if(item.ApplicationUser.UserName.Equals(UserManager.GetUserName(User))){
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.county)
@@ -46,7 +49,7 @@
                 @Html.DisplayFor(modelItem => item.street2)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ApplicationUser.Id)
+                @Html.DisplayFor(modelItem => item.ApplicationUser.UserName)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.AddressID">Edit</a> |
@@ -54,6 +57,7 @@
                 <a asp-action="Delete" asp-route-id="@item.AddressID">Delete</a>
             </td>
         </tr>
+    }
 }
     </tbody>
 </table>
