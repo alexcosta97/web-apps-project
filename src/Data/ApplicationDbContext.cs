@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using src.Models;
 
@@ -22,5 +24,13 @@ namespace src.Data
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
         }
+
+        public DbSet<Address> Addresses{get;set;}
+        public DbSet<Favourite> Favourites{get;set;}
+        public DbSet<Line> Lines{get;set;}
+        public DbSet<Route> Routes{get;set;}
+        public DbSet<RouteStop> RouteStops{get;set;}
+        public DbSet<Staff> Staff{get;set;}
+        public DbSet<Stop> Stops{get;set;}
     }
 }
