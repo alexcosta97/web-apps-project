@@ -1,0 +1,81 @@
+% !TeX program = xelatex
+\documentclass{report}
+% General
+\usepackage[british]{babel}
+\let\latinencoding\relax
+\usepackage[a4paper, portrait, margin=1in]{geometry}
+\usepackage{subfiles}
+\usepackage{enumitem}
+% Image
+\usepackage{graphicx}
+\graphicspath{{.img/}}
+% Table
+\usepackage{tabularx}
+\usepackage{ltablex}
+\usepackage{booktabs}
+%\newcolumntype{L}{>{\arraybackslash}X}
+%\newcolumntype{C}{>{\centering\arraybackslash}X}
+%\newcolumntype{R}{>{\raggedleft\arraybackslash}X}
+\usepackage{multirow}
+\renewcommand{\arraystretch}{1.5}
+% Layout
+\renewcommand{\thepart}{\Alph{part}}
+\renewcommand{\thesection}{\Alph{section}}
+\usepackage{tocloft}
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
+\usepackage{fontspec}
+\setmainfont[
+    ExternalLocation=.fonts/,
+    Ligatures=TeX,
+    BoldFont={LibertineBold.ttf},
+    BoldItalicFont={LibertineBoldItalic.ttf},
+    ItalicFont={LibertineRegularItalic.ttf}
+]{LibertineRegular}
+\setmonofont[
+    ExternalLocation=.fonts/,
+    Ligatures=TeX,
+    BoldFont={SourceSansProRegular.ttf},
+    BoldItalicFont={SourceSansProRegularItalic.ttf},
+    ItalicFont={SourceSansProRegularItalic.ttf}
+]{SourceSansProRegular}
+\usepackage{titlesec}
+\titleformat{\chapter}
+    {\Large\bfseries}   % format
+    {}                  % label
+    {0pt}               % separator
+    {\huge}             % before-code
+\addto\captionsbritish{\renewcommand{\contentsname}{Summary}}
+\addto\captionsbritish{\renewcommand{\partname}{Section}}
+\setlength{\parindent}{0cm} % 0.2cm
+\setlength{\parskip}{1em}
+\hbadness=99999
+\title{
+    \fontspec[Path=.fonts/]{LibertineDisplay.ttf}
+    \Large CO550\\
+    Web Applications\\
+    Coursework 3\vspace*{.65cm}\\
+    \huge Build a Simple Web Database Application\vfill
+}
+\author{
+    Alex Paulo da Costa\\
+    \textit{21611431}\\
+    \hfill\\
+    James Harris\\
+    \textit{21606555}
+}
+\date{
+    \vfill\textbf{\today}\\
+    \vspace*{.75cm}\textit{Computing \& Web Development}\\
+    Buckinghamshire New University
+}
+\begin{document}
+
+    \maketitle
+    \tableofcontents
+
+    \subfile{1background}
+    \subfile{2design}
+    \subfile{3technical}
+    \subfile{4testing}
+    \subfile{appendix}
+\end{document}
