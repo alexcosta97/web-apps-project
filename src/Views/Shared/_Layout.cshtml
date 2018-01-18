@@ -34,6 +34,7 @@
                     <li><a asp-area="" asp-controller="Lines" asp-action="Index">Lines</a></li>
                     @if(User.Identity.IsAuthenticated){
                         <li><a asp-area="" asp-controller="Addresses" asp-action="Index">Addresses</a></li>
+                        <li><a asp-area="" asp-controller="Favourites" asp-action="Index">Favourites</a></li>
                     }
                     @if(User.IsInRole("Manager") || User.IsInRole("Admin"))
                     {

@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using src.Data;
 using src.Models;
 
 namespace src.Controllers
 {
+    [Authorize(Roles = "Manager, Admin")]
     public class StaffController : Controller
     {
         private readonly ApplicationDbContext _context;
