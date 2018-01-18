@@ -23,9 +23,35 @@ namespace src.Controllers
 
         [AllowAnonymous]
         // GET: Routes
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
-            return View(await _context.Route.ToListAsync());
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewData["CurrentFilter"] = searchString;
+
+            var routes = from s in _context.Route
+                        select s;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                routes = routes.Where(s => s.Name.ToLower().Contains(searchString.ToLower())
+                                    || s.Note.ToLower().Contains(searchString.ToLower()));
+            }
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    routes = routes.OrderByDescending(s => s.Name);
+                    break;
+                case "Date":
+                    routes = routes.OrderBy(s => s.Departure);
+                    break;
+                case "date_desc":
+                    routes = routes.OrderByDescending(s => s.Departure);
+                    break;
+                default:
+                    routes = routes.OrderBy(s => s.Name);
+                    break;
+            }
+            return View(await routes.AsNoTracking().ToListAsync());
         }
         [AllowAnonymous]
         // GET: Routes/Details/5
