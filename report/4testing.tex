@@ -1,1 +1,16 @@
 \chapter{Evidence of Testing}
+
+In order to test our application, we made sure that only the right links
+on the top navigation were available to the right type of users. That means that
+anonymous users can only access the index and details of the routes and lines,
+that registered users, on top of that, can also access all the information of
+addresses and favourites, but only the ones that concern them; that the managers can also access the create, edit and delete functions for routes and lines, as well as assign stops to routes, add stops to the system and add staff to the system. The admins, on top of all that functionality, can also access all the functionality of the Users Admin and Roles Admin sections.
+
+In order to test that, we tried to login with various different types of users
+and see if the links were displayed to us in the first place, and then try to open those views by manually entering the name of the controller and action that
+we wanted to access. In all attempts to bypass the system, the system would either
+ask us to login (in the case of the user being anonymous) or give an access denied message.
+
+The second type of tests that we had to do related to the display of names instead of IDs when the information related to a member of another model than the
+one being shown in the current view. In order to do that, we opened the different actions of our application for all the controllers and confirmed that the right information was being displayed. If the name was being displayed correctly, that
+also meant that the relationship in the database was well created, especially inside the Index, Details and Delete controllers, where the whole object that was referenced by the model was sent to the view.
