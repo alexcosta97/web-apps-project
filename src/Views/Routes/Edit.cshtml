@@ -15,7 +15,8 @@
             <input type="hidden" asp-for="RouteID" />
             <div class="form-group">
                 <label asp-for="DriverID" class="control-label"></label>
-                <input asp-for="DriverID" class="form-control" />
+                <select asp-for="DriverID" class="form-control" asp-items="ViewBag.LineID">
+                </select>
                 <span asp-validation-for="DriverID" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -45,7 +46,9 @@
             </div>
             <div class="form-group">
                 <label asp-for="Direction" class="control-label"></label>
-                <select asp-for="Direction" class="form-control"></select>
+                <select asp-for="Direction" asp-items="Html.GetEnumSelectList<Direction>()" class="form-control">
+                    <option selected disabled>Select a direction...</option>
+                </select>
                 <span asp-validation-for="Direction" class="text-danger"></span>
             </div>
             <div class="form-group">

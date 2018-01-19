@@ -110,6 +110,8 @@ namespace src.Controllers
             {
                 return NotFound();
             }
+            ViewData["DriverID"] = new SelectList(_context.Staff, "StaffID", "StaffID", route.DriverID);
+            ViewData["LineID"] = new SelectList(_context.Lines, "LineID", "LineID", route.LineID);
             return View(route);
         }
 
