@@ -48,7 +48,7 @@
                 @Html.DisplayFor(modelItem => item.nationalInsuranceNumber)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ApplicationUser.Id)
+                @Html.DisplayFor(modelItem => item.ApplicationUser.UserName)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.StaffID">Edit</a> |

@@ -48,7 +48,7 @@ namespace src.Controllers
 		// GET: Staff/Create
 		public IActionResult Create()
 		{
-			ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id");
+			ViewData["ApplicationUserID"] = new SelectList(_context.Users, "UserName", "UserName");
 			return View();
 		}
 
@@ -57,15 +57,17 @@ namespace src.Controllers
 		// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create([Bind("StaffID,ApplicationUserID,hoursContracted,accountNumber,sortCode,nationalInsuranceNumber")] Staff staff)
+		public async Task<IActionResult> Create([Bind("StaffID,hoursContracted,accountNumber,sortCode,nationalInsuranceNumber")] Staff staff, string ApplicationUserID)
 		{
+			staff.ApplicationUserID = _context.Users.Where(n => n.UserName.Equals(ApplicationUserID)).SingleOrDefault().Id;
+
 			if (ModelState.IsValid)
 			{
 				_context.Add(staff);
 				await _context.SaveChangesAsync();
 				return RedirectToAction(nameof(Index));
 			}
-			ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", staff.ApplicationUserID);
+			ViewData["ApplicationUserID"] = new SelectList(_context.Users, "UserName", "UserName", ApplicationUserID);
 			return View(staff);
 		}
 
@@ -82,7 +84,7 @@ namespace src.Controllers
 			{
 				return NotFound();
 			}
-			ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", staff.ApplicationUserID);
+			ViewData["ApplicationUserID"] = new SelectList(_context.Users, "UserName", "UserName", _context.Users.Where(i => i.Id.Equals(staff.ApplicationUserID)).SingleOrDefault().UserName);
 			return View(staff);
 		}
 
@@ -91,12 +93,14 @@ namespace src.Controllers
 		// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(int id, [Bind("StaffID,ApplicationUserID,hoursContracted,accountNumber,sortCode,nationalInsuranceNumber")] Staff staff)
+		public async Task<IActionResult> Edit(int id, [Bind("StaffID,hoursContracted,accountNumber,sortCode,nationalInsuranceNumber")] Staff staff, string ApplicationUserID)
 		{
 			if (id != staff.StaffID)
 			{
 				return NotFound();
 			}
+
+			staff.ApplicationUserID = _context.Users.Where(n => n.NormalizedUserName.Equals(ApplicationUserID)).SingleOrDefault().Id;
 
 			if (ModelState.IsValid)
 			{
@@ -118,7 +122,7 @@ namespace src.Controllers
 				}
 				return RedirectToAction(nameof(Index));
 			}
-			ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", staff.ApplicationUserID);
+			ViewData["ApplicationUserID"] = new SelectList(_context.Users, "UserName", "UserName", ApplicationUserID);
 			return View(staff);
 		}
 
