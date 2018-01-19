@@ -4,50 +4,31 @@
     ViewData["Title"] = "Route Details";
 }
 
-<h2>Details</h2>
+<h2>@ViewData["Title"]</h2>
 
-<div>
-    <h4>Route</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.DriverID)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.DriverID)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Note)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Note)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Departure)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Departure)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Arrival)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Arrival)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Direction)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Direction)
-        </dd>
-    </dl>
-</div>
+<dl class="row">
+    @if(User.IsInRole("Manager") || User.IsInRole("Admin"))
+    {
+        <dt class="col-sm-2">@Html.DisplayNameFor(model => model.DriverID)</dt>
+        <dd class="col-sm-10">@Html.DisplayFor(model => model.DriverID)</dd>
+    }
+
+    <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Name)</dt>
+    <dd class="col-sm-10">@Html.DisplayFor(model => model.Name)</dd>
+
+    <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Note)</dt>
+    <dd class="col-sm-10">@Html.DisplayFor(model => model.Note)</dd>
+
+    <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Departure)</dt>
+    <dd class="col-sm-10">@Html.DisplayFor(model => model.Departure)</dd>
+
+    <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Arrival)</dt>
+    <dd class="col-sm-10">@Html.DisplayFor(model => model.Arrival)</dd>
+
+    <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Direction)</dt>
+    <dd class="col-sm-10">@Html.DisplayFor(model => model.Direction)</dd>
+</dl>
+
 <div>
     @if(User.IsInRole("Manager") || User.IsInRole("Admin")){
         <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@Model.RouteID">Edit</a>
