@@ -6,11 +6,13 @@
     ViewData["Title"] = "Favourites";
 }
 
-<h2>Favourites</h2>
+<div class="row row-header">
+    <h2>@ViewData["Title"]</h2>
+    <div class="ml-auto">
+        <a class="btn btn-success" asp-action="Create">Create New</a>
+    </div>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>

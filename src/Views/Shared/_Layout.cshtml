@@ -6,52 +6,48 @@
     <title>@ViewData["Title"] - src</title>
 
     <environment include="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/css/site.css" />
+        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     </environment>
     <environment exclude="Development">
-        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
-              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">@Constants.BusCompany</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Routes" asp-action="Index">Routes</a></li>
-                    <li><a asp-area="" asp-controller="Lines" asp-action="Index">Lines</a></li>
-                    @if(User.Identity.IsAuthenticated){
-                        <li><a asp-area="" asp-controller="Addresses" asp-action="Index">Addresses</a></li>
-                        <li><a asp-area="" asp-controller="Favourites" asp-action="Index">Favourites</a></li>
+            <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">@Constants.BusCompany</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Routes" asp-action="Index">Routes</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Lines" asp-action="Index">Lines</a></li>
+                    @if(User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Addresses" asp-action="Index">Addresses</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Favourites" asp-action="Index">Favourites</a></li>
                     }
                     @if(User.IsInRole("Manager") || User.IsInRole("Admin"))
                     {
-                        <li><a asp-area="" asp-controller="RouteStops" asp-action="Index">Routes and Stops</a></li>
-                        <li><a asp-area="" asp-controller="Stops" asp-action="Index">Stops</a></li>
-                        <li><a asp-area="" asp-controller="Staff" asp-action="Index">Staff</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="RouteStops" asp-action="Index">Routes and Stops</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Stops" asp-action="Index">Stops</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Staff" asp-action="Index">Staff</a></li>
                     }
                     @if(User.IsInRole("Admin"))
                     {
-                        <li><a asp-area="" asp-controller="Admin" asp-action="Index">Users Admin</a></li>
-                        <li><a asp-area="" asp-controller="RoleAdmin" asp-action="Index">Roles Admin</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Admin" asp-action="Index">Users Admin</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="RoleAdmin" asp-action="Index">Roles Admin</a></li>
                     }
                 </ul>
                 @await Html.PartialAsync("_LoginPartial")
             </div>
         </div>
     </nav>
+
     <div class="container body-content">
         @RenderBody()
         <hr />
@@ -60,26 +56,10 @@
         </footer>
     </div>
 
-    <environment include="Development">
-        <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
-    </environment>
-    <environment exclude="Development">
-        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
-                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
-                asp-fallback-test="window.jQuery"
-                crossorigin="anonymous"
-                integrity="sha384-K+ctZQ+LL8q6tP7I94W+qzQsfRV2a+AfHIi9k8z8l9ggpc8X+Ytst4yBo/hH+8Fk">
-        </script>
-        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
-                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
-                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
-                crossorigin="anonymous"
-                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
-        </script>
-        <script src="~/js/site.min.js" asp-append-version="true"></script>
-    </environment>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
     @RenderSection("Scripts", required: false)
 </body>

@@ -4,11 +4,17 @@
     ViewData["Title"] = "Route-Stop Links";
 }
 
-<h2>Route-Stop Links</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<div class="row row-header">
+    <h2>@ViewData["Title"]</h2>
+    <div class="ml-auto">
+        @if(User.IsInRole("Manager") || User.IsInRole("Admin"))
+        {
+            <a class="btn btn-success" asp-action="Create">Create New</a>
+        }
+    </div>
+</div>
+
 <table class="table">
     <thead>
         <tr>
