@@ -23,6 +23,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.route)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ApplicationUser)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -38,6 +41,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.route.RouteID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ApplicationUser.UserName)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.FavouriteID">Edit</a> |

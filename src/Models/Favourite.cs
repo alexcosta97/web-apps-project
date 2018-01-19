@@ -16,7 +16,7 @@ namespace src.Models
 
         public Route route{get;set;}
         public Line Line{get;set;}
-
+        [Display(Name = "Application User")]
         public ApplicationUser ApplicationUser{get;set;}
     }
 }
