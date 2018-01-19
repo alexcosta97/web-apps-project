@@ -69,7 +69,7 @@ namespace src.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", address.ApplicationUserID);
+            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "UserName", "UserName", ApplicationUserID);
             return View(address);
         }
 
@@ -86,7 +86,7 @@ namespace src.Controllers
             {
                 return NotFound();
             }
-            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", address.ApplicationUserID);
+            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "UserName", "UserName", _context.Users.Where(u => u.Id == address.ApplicationUserID).SingleOrDefault().UserName);
             return View(address);
         }
 
@@ -95,12 +95,14 @@ namespace src.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AddressID,county,postCode,street1,street2,ApplicationUserID")] Address address)
+        public async Task<IActionResult> Edit(int id, [Bind("AddressID,county,postCode,street1,street2")] Address address, string ApplicationUserID)
         {
             if (id != address.AddressID)
             {
                 return NotFound();
             }
+
+            address.ApplicationUserID = _context.Users.Where(n => n.UserName == ApplicationUserID).SingleOrDefault().Id;
 
             if (ModelState.IsValid)
             {
@@ -122,7 +124,7 @@ namespace src.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "Id", "Id", address.ApplicationUserID);
+            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "UserName", "UserName", ApplicationUserID);
             return View(address);
         }
 

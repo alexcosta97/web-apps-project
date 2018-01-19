@@ -6,6 +6,8 @@ namespace src.Models
     public class Favourite
     {
         public int FavouriteID{get;set;}
+        [Display(Name = "User ID")]
+        public string ApplicationUserID{get;set;}
         public string Name{get;set;}
         [Display(Name="Route ID")]
         public int? RouteID{get;set;}
@@ -14,5 +16,7 @@ namespace src.Models
 
         public Route route{get;set;}
         public Line Line{get;set;}
+
+        public ApplicationUser ApplicationUser{get;set;}
     }
 }

@@ -136,9 +136,11 @@ namespace src.Migrations
 
                     b.Property<string>("county");
 
-                    b.Property<string>("postCode");
+                    b.Property<string>("postCode")
+                        .IsRequired();
 
-                    b.Property<string>("street1");
+                    b.Property<string>("street1")
+                        .IsRequired();
 
                     b.Property<string>("street2");
 
@@ -204,7 +206,7 @@ namespace src.Migrations
                     b.Property<int>("FavouriteID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ApplicationUserId");
+                    b.Property<string>("ApplicationUserID");
 
                     b.Property<int?>("LineID");
 
@@ -214,7 +216,7 @@ namespace src.Migrations
 
                     b.HasKey("FavouriteID");
 
-                    b.HasIndex("ApplicationUserId");
+                    b.HasIndex("ApplicationUserID");
 
                     b.HasIndex("LineID");
 
@@ -383,9 +385,9 @@ namespace src.Migrations
 
             modelBuilder.Entity("src.Models.Favourite", b =>
                 {
-                    b.HasOne("src.Models.ApplicationUser")
+                    b.HasOne("src.Models.ApplicationUser", "ApplicationUser")
                         .WithMany("Favourites")
-                        .HasForeignKey("ApplicationUserId");
+                        .HasForeignKey("ApplicationUserID");
 
                     b.HasOne("src.Models.Line", "Line")
                         .WithMany()

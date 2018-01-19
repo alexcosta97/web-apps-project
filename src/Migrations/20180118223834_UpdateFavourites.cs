@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace src.Migrations
 {
-    public partial class AddTables : Migration
+    public partial class UpdateFavourites : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -91,8 +91,8 @@ namespace src.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     ApplicationUserID = table.Column<string>(nullable: true),
                     county = table.Column<string>(nullable: true),
-                    postCode = table.Column<string>(nullable: true),
-                    street1 = table.Column<string>(nullable: true),
+                    postCode = table.Column<string>(nullable: false),
+                    street1 = table.Column<string>(nullable: false),
                     street2 = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -252,7 +252,7 @@ namespace src.Migrations
                 {
                     FavouriteID = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    ApplicationUserId = table.Column<string>(nullable: true),
+                    ApplicationUserID = table.Column<string>(nullable: true),
                     LineID = table.Column<int>(nullable: true),
                     Name = table.Column<string>(nullable: true),
                     RouteID = table.Column<int>(nullable: true)
@@ -261,8 +261,8 @@ namespace src.Migrations
                 {
                     table.PrimaryKey("PK_Favourites", x => x.FavouriteID);
                     table.ForeignKey(
-                        name: "FK_Favourites_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
+                        name: "FK_Favourites_AspNetUsers_ApplicationUserID",
+                        column: x => x.ApplicationUserID,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -371,9 +371,9 @@ namespace src.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Favourites_ApplicationUserId",
+                name: "IX_Favourites_ApplicationUserID",
                 table: "Favourites",
-                column: "ApplicationUserId");
+                column: "ApplicationUserID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Favourites_LineID",

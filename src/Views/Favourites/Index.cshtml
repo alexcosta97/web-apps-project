@@ -1,4 +1,6 @@
+@using Microsoft.AspNetCore.Identity
 @model IEnumerable<src.Models.Favourite>
+@inject UserManager<ApplicationUser> UserManager
 
 @{
     ViewData["Title"] = "Favourites";
@@ -26,6 +28,7 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
+    if(item.ApplicationUser.UserName.Equals(UserManager.GetUserName(User))){
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
@@ -42,6 +45,7 @@
                 <a asp-action="Delete" asp-route-id="@item.FavouriteID">Delete</a>
             </td>
         </tr>
+    }
 }
     </tbody>
 </table>

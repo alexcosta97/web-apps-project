@@ -24,7 +24,7 @@ namespace src.Controllers
         // GET: Favourites
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Favourites.Include(f => f.Line).Include(f => f.route);
+            var applicationDbContext = _context.Favourites.Include(f => f.Line).Include(f => f.route).Include(a => a.ApplicationUser);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -39,6 +39,7 @@ namespace src.Controllers
             var favourite = await _context.Favourites
                 .Include(f => f.Line)
                 .Include(f => f.route)
+                .Include(a => a.ApplicationUser)
                 .SingleOrDefaultAsync(m => m.FavouriteID == id);
             if (favourite == null)
             {
@@ -53,6 +54,7 @@ namespace src.Controllers
         {
             ViewData["LineID"] = new SelectList(_context.Lines, "LineID", "LineID");
             ViewData["RouteID"] = new SelectList(_context.Routes, "RouteID", "RouteID");
+            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "UserName", "UserName");
             return View();
         }
 
@@ -61,8 +63,9 @@ namespace src.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FavouriteID,Name,RouteID,LineID")] Favourite favourite)
+        public async Task<IActionResult> Create([Bind("FavouriteID,Name,RouteID,LineID")] Favourite favourite, string ApplicationUserID)
         {
+            favourite.ApplicationUserID = _context.Users.Where(n => n.UserName == ApplicationUserID).SingleOrDefault().Id;
             if (ModelState.IsValid)
             {
                 _context.Add(favourite);
@@ -71,6 +74,7 @@ namespace src.Controllers
             }
             ViewData["LineID"] = new SelectList(_context.Lines, "LineID", "LineID", favourite.LineID);
             ViewData["RouteID"] = new SelectList(_context.Routes, "RouteID", "RouteID", favourite.RouteID);
+            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "UserName", "UserName", ApplicationUserID);
             return View(favourite);
         }
 
@@ -89,6 +93,7 @@ namespace src.Controllers
             }
             ViewData["LineID"] = new SelectList(_context.Lines, "LineID", "LineID", favourite.LineID);
             ViewData["RouteID"] = new SelectList(_context.Routes, "RouteID", "RouteID", favourite.RouteID);
+            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "UserName", "UserName", _context.Users.Where(u => u.Id == favourite.ApplicationUserID).SingleOrDefault().UserName);
             return View(favourite);
         }
 
@@ -97,12 +102,14 @@ namespace src.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("FavouriteID,Name,RouteID,LineID")] Favourite favourite)
+        public async Task<IActionResult> Edit(int id, [Bind("FavouriteID,Name,RouteID,LineID")] Favourite favourite, string ApplicationUserID)
         {
             if (id != favourite.FavouriteID)
             {
                 return NotFound();
             }
+
+            favourite.ApplicationUserID = _context.Users.Where(n => n.UserName == ApplicationUserID).SingleOrDefault().Id;
 
             if (ModelState.IsValid)
             {
@@ -126,6 +133,7 @@ namespace src.Controllers
             }
             ViewData["LineID"] = new SelectList(_context.Lines, "LineID", "LineID", favourite.LineID);
             ViewData["RouteID"] = new SelectList(_context.Routes, "RouteID", "RouteID", favourite.RouteID);
+            ViewData["ApplicationUserID"] = new SelectList(_context.Users, "UserName", "UserName", ApplicationUserID);
             return View(favourite);
         }
 
@@ -140,6 +148,7 @@ namespace src.Controllers
             var favourite = await _context.Favourites
                 .Include(f => f.Line)
                 .Include(f => f.route)
+                .Include(a => a.ApplicationUser)
                 .SingleOrDefaultAsync(m => m.FavouriteID == id);
             if (favourite == null)
             {
