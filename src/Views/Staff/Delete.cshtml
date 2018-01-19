@@ -42,10 +42,10 @@
             @Html.DisplayFor(model => model.ApplicationUser.Id)
         </dd>
     </dl>
-    
+
     <form asp-action="Delete">
         <input type="hidden" asp-for="StaffID" />
-        <input type="submit" value="Delete" class="btn btn-default" /> |
-        <a asp-action="Index">Back to List</a>
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a asp-action="Index" class="btn">Cancel</a>
     </form>
 </div>
