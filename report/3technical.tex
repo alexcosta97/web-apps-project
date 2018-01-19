@@ -47,3 +47,20 @@ to those associated with the currently logged in user.
   \includegraphics[width=\linewidth]{addresses-manager}
   \caption{Another user account with no addresses displayed}
 \end{figure}
+
+In order to allow the system administrator manage users and roles in the
+application, we had to implement our own custom controllers and views.
+It made for a better customized and saved also the amount of scaffolded code
+we had to review.
+
+The rest of the views and controllers were scaffolded after we had built the
+models based on our initial class diagram. After scaffolding the controllers
+and views, we had to test the components that were built to make sure that
+the relationships between the elements were defined like we wanted them to
+and that the data that we wanted to be displayed was doing so correctly.
+
+For this project, we spent most of the time around the authorization processes,
+making sure that only the right users had access to the right data and functionality,
+but also around customizing the views and controllers so that names instead of IDs
+were displayed to the users, when an element from a relationship had to be selected
+(for example the staff member that will be the driver for a route).
