@@ -10,10 +10,52 @@ Customers can look at the timetable for the line, without knowing who the driver
 
 The customers board the bus, pay the driver, or show them a previously bought and still valid ticket, and take a seat.
 
-\section{Business Goals}
+\section{Functional Requirements}
 
-The goal of the business is to provide customers with a reliable, fast and relevant public transportation service. All whilst making the running costs (infrastructure, staff, etc.) as optimal as possible.
+\begin{itemize}
+  \item Enable users to login and register
+    \begin{itemize}
+      \item Normal (unprivileged users) can register anytime
+      \item Privileged users must be added by an admin
+    \end{itemize}
+  \item Enable users and visitors to see bus timetables
+  \item Enable registered users to save their favourite routes
+  \item Allow admins and authorised staff to change timetables and rotas
+    \begin{itemize}
+      \item Create bus lines and routes
+      \item Allocate staff to lines
+    \end{itemize}
+  \item Allow staff to see their rota
+    \begin{itemize}
+      \item Staff assigned to particular routes
+      \item Staff dashboard allows to print weekly rota as a pdf
+    \end{itemize}
+  \item The users should be able to search routes by terms, e.g route code, town names or bus stop names
+\end{itemize}
 
-In order to make the service fast and relevant, the company tracks what stops seem to be the most used by customers, either through driver feedback or through the use of the website. They can then check what sections of the main lines are used the most at various times of the day, adapting the routes and services available. For example, increased peak time services during school holidays.
+\clearpage
+\section{Outline of the Project}
 
-To avoid unnessary costs, the company makes sure that all drivers have their hours allocated properly - ensuring they are not 
+\begin{enumerate}
+  \item Review functional requirements against the business goals
+  \item Develop a user management system for customers, drivers and managers
+  \begin{enumerate}
+    \item Implement a user login system
+    \item Implement registration for customers
+    \item Implement a timetable for drivers (dashboard)
+    \item Restrict data modification to staff with the required role (e.g. managers)
+  \end{enumerate}
+  \item Develop a timetabling service for buses
+  \begin{enumerate}
+    \item Implement bus lines
+    \item Implement bus routes for each line
+    \item Implement bus stops and allow associating routes with these stops
+    \item Build a front-end for route information
+    \item Allow customers to favourite the routes and lines
+  \end{enumerate}
+  \item Check the implemented system satisfies the functional
+  requirements outlined by the business goals
+  \begin{enumerate}
+    \item Make any required changes to meet the requirements
+  \end{enumerate}
+\end{enumerate}
