@@ -51,8 +51,8 @@ namespace src.Controllers
         // GET: RouteStops/Create
         public IActionResult Create()
         {
-            ViewData["RouteID"] = new SelectList(_context.Routes, "RouteID", "RouteID");
-            ViewData["StopID"] = new SelectList(_context.Stops, "StopID", "StopID");
+            ViewData["RouteID"] = new SelectList(_context.Routes, "Name", "Name");
+            ViewData["StopID"] = new SelectList(_context.Stops, "Name", "Name");
             return View();
         }
 
@@ -61,16 +61,19 @@ namespace src.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("RouteStopID,RouteID,StopID")] RouteStop routeStop)
+        public async Task<IActionResult> Create([Bind("RouteStopID")] RouteStop routeStop, string RouteID, string StopID)
         {
+            routeStop.RouteID = _context.Routes.Where(n => n.Name == RouteID).SingleOrDefault().RouteID;
+            routeStop.StopID = _context.Stops.Where(n => n.Name == StopID).SingleOrDefault().StopID;
+
             if (ModelState.IsValid)
             {
                 _context.Add(routeStop);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RouteID"] = new SelectList(_context.Routes, "RouteID", "RouteID", routeStop.RouteID);
-            ViewData["StopID"] = new SelectList(_context.Stops, "StopID", "StopID", routeStop.StopID);
+            ViewData["RouteID"] = new SelectList(_context.Routes, "Name", "Name", RouteID);
+            ViewData["StopID"] = new SelectList(_context.Stops, "Name", "Name", StopID);
             return View(routeStop);
         }
 
@@ -87,8 +90,8 @@ namespace src.Controllers
             {
                 return NotFound();
             }
-            ViewData["RouteID"] = new SelectList(_context.Routes, "RouteID", "RouteID", routeStop.RouteID);
-            ViewData["StopID"] = new SelectList(_context.Stops, "StopID", "StopID", routeStop.StopID);
+            ViewData["RouteID"] = new SelectList(_context.Routes, "Name", "Name", _context.Routes.Where(i => i.RouteID == routeStop.RouteID).SingleOrDefault().Name);
+            ViewData["StopID"] = new SelectList(_context.Stops, "Name", "Name", _context.Stops.Where(i => i.StopID == routeStop.StopID).SingleOrDefault().Name);
             return View(routeStop);
         }
 
@@ -97,12 +100,15 @@ namespace src.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("RouteStopID,RouteID,StopID")] RouteStop routeStop)
+        public async Task<IActionResult> Edit(int id, [Bind("RouteStopID")] RouteStop routeStop, string RouteID, string StopID)
         {
             if (id != routeStop.RouteStopID)
             {
                 return NotFound();
             }
+
+            routeStop.RouteID = _context.Routes.Where(n => n.Name == RouteID).SingleOrDefault().RouteID;
+            routeStop.StopID = _context.Stops.Where(n => n.Name == StopID).SingleOrDefault().StopID;
 
             if (ModelState.IsValid)
             {
@@ -124,8 +130,8 @@ namespace src.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["RouteID"] = new SelectList(_context.Routes, "RouteID", "RouteID", routeStop.RouteID);
-            ViewData["StopID"] = new SelectList(_context.Stops, "StopID", "StopID", routeStop.StopID);
+            ViewData["RouteID"] = new SelectList(_context.Routes, "Name", "Name", RouteID);
+            ViewData["StopID"] = new SelectList(_context.Stops, "Name", "Name", StopID);
             return View(routeStop);
         }
 
