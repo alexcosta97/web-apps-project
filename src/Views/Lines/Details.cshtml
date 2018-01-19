@@ -6,33 +6,26 @@
 
 <h2>Details</h2>
 
-<div>
-    <h4>Line</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Start)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Start)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.End)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.End)
-        </dd>
-    </dl>
+<div class="row">
+    <div class="col">
+        <h3>Line</h3>
+
+        <dl class="row">
+            <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Name)</dt>
+            <dd class="col-sm-10">@Html.DisplayFor(model => model.Name)</dd>
+
+            <dt class="col-sm-2"> @Html.DisplayNameFor(model => model.Start)</dt>
+            <dd class="col-sm-10">@Html.DisplayFor(model => model.Start)</dd>
+
+            <dt class="col-sm-2">@Html.DisplayNameFor(model => model.End)</dt>
+            <dd class="col-sm-10">@Html.DisplayFor(model => model.End)</dd>
+        </dl>
+    </div>
 </div>
+
 <div>
     @if(User.IsInRole("Manager") || User.IsInRole("Admin")){
-        <a asp-action="Edit" asp-route-id="@Model.LineID">Edit</a>
+        <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@Model.LineID">Edit</a>
     }
-    <a asp-action="Index">Back to List</a>
+    <a class="btn btn-primary" asp-action="Index">Back to List</a>
 </div>
