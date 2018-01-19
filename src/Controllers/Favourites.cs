@@ -52,8 +52,8 @@ namespace src.Controllers
         // GET: Favourites/Create
         public IActionResult Create()
         {
-            ViewData["LineID"] = new SelectList(_context.Lines, "LineID", "LineID");
-            ViewData["RouteID"] = new SelectList(_context.Routes, "RouteID", "RouteID");
+            ViewData["LineID"] = new SelectList(_context.Lines, "Name", "Name");
+            ViewData["RouteID"] = new SelectList(_context.Routes, "Name", "Name");
             ViewData["ApplicationUserID"] = new SelectList(_context.Users, "UserName", "UserName");
             return View();
         }
@@ -63,17 +63,19 @@ namespace src.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FavouriteID,Name,RouteID,LineID")] Favourite favourite, string ApplicationUserID)
+        public async Task<IActionResult> Create([Bind("FavouriteID,Name")] Favourite favourite, string RouteID, string LineID, string ApplicationUserID)
         {
             favourite.ApplicationUserID = _context.Users.Where(n => n.UserName == ApplicationUserID).SingleOrDefault().Id;
+            favourite.RouteID = _context.Routes.Where(n => n.Name == RouteID).SingleOrDefault().RouteID;
+            favourite.LineID = _context.Lines.Where(n => n.Name == LineID).SingleOrDefault().LineID;
             if (ModelState.IsValid)
             {
                 _context.Add(favourite);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LineID"] = new SelectList(_context.Lines, "LineID", "LineID", favourite.LineID);
-            ViewData["RouteID"] = new SelectList(_context.Routes, "RouteID", "RouteID", favourite.RouteID);
+            ViewData["LineID"] = new SelectList(_context.Lines, "Name", "Name", LineID);
+            ViewData["RouteID"] = new SelectList(_context.Routes, "Name", "Name", RouteID);
             ViewData["ApplicationUserID"] = new SelectList(_context.Users, "UserName", "UserName", ApplicationUserID);
             return View(favourite);
         }
@@ -91,8 +93,8 @@ namespace src.Controllers
             {
                 return NotFound();
             }
-            ViewData["LineID"] = new SelectList(_context.Lines, "LineID", "LineID", favourite.LineID);
-            ViewData["RouteID"] = new SelectList(_context.Routes, "RouteID", "RouteID", favourite.RouteID);
+            ViewData["LineID"] = new SelectList(_context.Lines, "Name", "Name", _context.Lines.Where(n => n.LineID == favourite.LineID).SingleOrDefault().Name);
+            ViewData["RouteID"] = new SelectList(_context.Routes, "Name", "Name", _context.Routes.Where(n => n.RouteID == favourite.RouteID).SingleOrDefault().Name);
             ViewData["ApplicationUserID"] = new SelectList(_context.Users, "UserName", "UserName", _context.Users.Where(u => u.Id == favourite.ApplicationUserID).SingleOrDefault().UserName);
             return View(favourite);
         }
@@ -102,7 +104,7 @@ namespace src.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("FavouriteID,Name,RouteID,LineID")] Favourite favourite, string ApplicationUserID)
+        public async Task<IActionResult> Edit(int id, [Bind("FavouriteID,Name")] Favourite favourite, string RouteID, string LineID, string ApplicationUserID)
         {
             if (id != favourite.FavouriteID)
             {
@@ -110,6 +112,8 @@ namespace src.Controllers
             }
 
             favourite.ApplicationUserID = _context.Users.Where(n => n.UserName == ApplicationUserID).SingleOrDefault().Id;
+            favourite.RouteID = _context.Routes.Where(n => n.Name == RouteID).SingleOrDefault().RouteID;
+            favourite.LineID = _context.Lines.Where(n => n.Name == LineID).SingleOrDefault().LineID;
 
             if (ModelState.IsValid)
             {
@@ -131,8 +135,8 @@ namespace src.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LineID"] = new SelectList(_context.Lines, "LineID", "LineID", favourite.LineID);
-            ViewData["RouteID"] = new SelectList(_context.Routes, "RouteID", "RouteID", favourite.RouteID);
+            ViewData["LineID"] = new SelectList(_context.Lines, "Name", "Name", LineID);
+            ViewData["RouteID"] = new SelectList(_context.Routes, "Name", "Name", RouteID);
             ViewData["ApplicationUserID"] = new SelectList(_context.Users, "UserName", "UserName", ApplicationUserID);
             return View(favourite);
         }
