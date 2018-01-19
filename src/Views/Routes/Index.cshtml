@@ -54,7 +54,7 @@
             </td>
             @if(User.IsInRole("Manager") || User.IsInRole("Admin") || User.IsInRole("Driver")){
                 <td>
-                    @Html.DisplayFor(modelItem => item.DriverID)
+                    @Html.DisplayFor(modelItem => item.Driver.nationalInsuranceNumber)
                 </td>
             }
             <td>

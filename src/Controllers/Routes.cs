@@ -29,7 +29,7 @@ namespace src.Controllers
             ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
             ViewData["CurrentFilter"] = searchString;
 
-            var routes = from s in _context.Routes select s;
+            var routes = from s in _context.Routes.Include(a => a.Driver.ApplicationUser) select s;
             if(!String.IsNullOrEmpty(searchString))
             {
                 routes = routes.Where(s => s.Name.ToLower().Contains(searchString.ToLower()) || s.Note.ToLower().Contains(searchString.ToLower()));
@@ -62,6 +62,7 @@ namespace src.Controllers
             }
 
             var route = await _context.Routes
+                .Include(a => a.Driver.ApplicationUser)
                 .SingleOrDefaultAsync(m => m.RouteID == id);
             if (route == null)
             {
@@ -80,7 +81,7 @@ namespace src.Controllers
         }
 
         // POST: Routes/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -105,7 +106,9 @@ namespace src.Controllers
                 return NotFound();
             }
 
-            var route = await _context.Routes.SingleOrDefaultAsync(m => m.RouteID == id);
+            var route = await _context.Routes
+                .Include(a => a.Driver.ApplicationUser)
+                .SingleOrDefaultAsync(m => m.RouteID == id);
             if (route == null)
             {
                 return NotFound();
@@ -116,7 +119,7 @@ namespace src.Controllers
         }
 
         // POST: Routes/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
